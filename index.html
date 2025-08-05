@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>密码验证 - 显示视频</title>
+    <style>
+        #secretVideo {
+            display: none;
+            margin-top: 20px;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <p>请输入密码：<input type="password" id="passwordInput" onkeypress="checkPassword(event)"/></p>
+    <p id="message" style="color: red;"></p>
+    <video id="secretVideo" controls>
+        <source src="https://vip.ffzy-play6.com/20221205/9817_635fda4f/index.m3u8" type="video/mp4">
+        您的浏览器不支持视频播放。
+    </video>
+    
+    <script>
+        function checkPassword(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('passwordInput');
+                const message = document.getElementById('message');
+                const secretVideo = document.getElementById('secretVideo');
+                
+                if (input.value === '668181') {
+                    message.textContent = "密码正确！";
+                    message.style.color = "green";
+                    secretVideo.style.display = "block";
+                } else {
+                    message.textContent = "密码错误";
+                    message.style.color = "red";
+                    secretVideo.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
