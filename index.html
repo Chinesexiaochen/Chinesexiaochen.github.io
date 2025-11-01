@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📁 MyCloudrive - 我的个人云盘</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 MyCloudrive</h1>
+            <p>一个安全、免费的静态文件托管服务</p>
+            <div class="stats" id="stats">
+                <span>加载中...</span>
+            </div>
+        </header>
+        
+        <main>
+            <div class="search-box">
+                <input type="text" id="search" placeholder="🔍 搜索文件..." onkeyup="filterFiles()">
+            </div>
+            
+            <div class="file-section">
+                <h2>📂 文件列表</h2>
+                <div id="file-list" class="file-grid">
+                    <!-- 文件列表将由JavaScript动态生成 -->
+                    <div class="loading">加载文件中...</div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Powered by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> | 
+            <a href="https://github.com/mycloudrive/mycloudrive.github.io" target="_blank">查看源码</a></p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
