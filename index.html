@@ -3,39 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📁 MyCloudrive - 我的个人云盘</title>
+    <title>🔐 私人云盘 - 认证访问</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🚀 MyCloudrive</h1>
-            <p>一个安全、免费的静态文件托管服务</p>
-            <div class="stats" id="stats">
-                <span>加载中...</span>
-            </div>
-        </header>
-        
-        <main>
-            <div class="search-box">
-                <input type="text" id="search" placeholder="🔍 搜索文件..." onkeyup="filterFiles()">
+    <!-- 密码认证页面 -->
+    <div id="authContainer" class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <i class="fas fa-lock"></i>
+                <h1>私人云盘访问</h1>
+                <p>请输入访问密码进入云盘系统</p>
             </div>
             
-            <div class="file-section">
-                <h2>📂 文件列表</h2>
-                <div id="file-list" class="file-grid">
-                    <!-- 文件列表将由JavaScript动态生成 -->
-                    <div class="loading">加载文件中...</div>
+            <div class="auth-form">
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="passwordInput" placeholder="请输入访问密码" maxlength="6">
+                    <button class="toggle-password" onclick="togglePasswordVisibility()">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                
+                <div class="password-hint">
+                    <span>提示：6位数字密码</span>
+                </div>
+                
+                <button class="auth-btn" onclick="checkPassword()">
+                    <i class="fas fa-sign-in-alt"></i> 进入云盘
+                </button>
+                
+                <div class="auth-error hidden" id="errorMessage">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>密码错误，请重新输入</span>
                 </div>
             </div>
-        </main>
-        
-        <footer>
-            <p>Powered by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> | 
-            <a href="https://github.com/mycloudrive/mycloudrive.github.io" target="_blank">查看源码</a></p>
-        </footer>
+            
+            <div class="auth-footer">
+                <p>🔒 受保护的私人存储空间</p>
+            </div>
+        </div>
     </div>
-    
+
+    <!-- 主云盘内容（默认隐藏） -->
+    <div id="mainContainer" class="main-container hidden">
+        <div class="container">
+            <!-- 头部 -->
+            <header>
+                <div class="header-content">
+                    <h1><i class="fas fa-cloud"></i> 私人云盘</h1>
+                    <p>安全加密的文件存储服务</p>
+                    <div class="header-actions">
+                        <div class="stats" id="stats">
+                            <span><i class="fas fa-spinner fa-spin"></i> 加载中...</span>
+                        </div>
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> 退出
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 控制面板 -->
+            <section class="control-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-cogs"></i> 文件管理</h2>
+                </div>
+                
+                <!-- 上传区域 -->
+                <div class="upload-section">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <h3>点击或拖拽文件到此处上传</h3>
+                        <p>支持单个文件上传</p>
+                        <input type="file" id="fileInput" hidden>
+                        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-plus"></i> 选择文件
+                        </button>
+                    </div>
+                    <div class="upload-progress hidden" id="uploadProgress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <span id="progressText">上传中... 0%</span>
+                    </div>
+                </div>
+
+                <!-- 搜索和筛选 -->
+                <div class="search-section">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search" placeholder="搜索文件..." onkeyup="filterFiles()">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 文件列表 -->
+            <section class="file-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-folder"></i> 文件列表</h2>
+                    <div class="file-count" id="fileCount">0 个文件</div>
+                </div>
+                
+                <div id="fileList" class="file-grid">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i> 加载文件中...
+                    </div>
+                </div>
+            </section>
+
+            <!-- 底部 -->
+            <footer>
+                <p>
+                    <i class="fas fa-shield-alt"></i> 
+                    安全认证访问 | 
+                    <i class="fas fa-clock"></i> 
+                    最后登录: <span id="loginTime"></span>
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 加载脚本 -->
     <script src="script.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>
