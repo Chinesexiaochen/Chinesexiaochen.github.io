@@ -265,3 +265,34 @@ if (document.getElementById('mainContainer') &&
     !document.getElementById('mainContainer').classList.contains('hidden')) {
     cloudDrive.init();
                                         }
+// 管理GitHub Token
+function manageGitHubToken() {
+    console.log('manageGitHubToken 函数被调用');
+    
+    if (typeof githubUploader === 'undefined') {
+        console.error('githubUploader 未定义');
+        alert('GitHub上传器未正确加载，请刷新页面重试');
+        return;
+    }
+    
+    if (githubUploader.isAuthenticated) {
+        if (confirm('确定要移除已保存的GitHub Token吗？')) {
+            githubUploader.clearToken();
+            if (typeof cloudDrive !== 'undefined') {
+                cloudDrive.updateAuthStatus();
+            }
+            // 显示成功消息
+            const message = document.createElement('div');
+            message.className = 'message success';
+            message.innerHTML = '<i class="fas fa-check-circle"></i> Token 已移除';
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 3000);
+        }
+    } else {
+        console.log('显示认证弹窗');
+        githubUploader.showAuthModal();
+    }
+}
+
+// 确保函数在全局可访问
+window.manageGitHubToken = manageGitHubToken;
