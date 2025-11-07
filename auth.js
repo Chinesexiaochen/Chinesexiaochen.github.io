@@ -58,8 +58,8 @@ function loginSuccess() {
         document.getElementById('loginTime').textContent = new Date().toLocaleString();
         
         // 初始化云盘
-        if (typeof cloudDrive !== 'undefined') {
-            cloudDrive.init();
+        if (typeof initCloudDrive === 'function') {
+            initCloudDrive();
         }
     }, 500);
 }
