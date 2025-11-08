@@ -30,6 +30,158 @@ const FILE_ICONS = {
 // 全局变量
 let cloudDrive;
 
+// 错误显示函数
+function showError(message) {
+    // 创建错误面板
+    let errorPanel = document.getElementById('errorPanel');
+    if (!errorPanel) {
+        errorPanel = document.createElement('div');
+        errorPanel.id = 'errorPanel';
+        errorPanel.className = 'error-panel';
+        errorPanel.innerHTML = `
+            <div class="error-content">
+                <h3>🚨 错误信息</h3>
+                <div id="errorMessage"></div>
+            </div>
+            <button class="close-error" onclick="document.getElementById('errorPanel').classList.remove('show')">关闭</button>
+        `;
+        document.body.appendChild(errorPanel);
+    }
+    
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.textContent = message;
+    errorPanel.classList.add('show');
+}
+
+// 显示消息
+function showMessage(message, type = 'info') {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 3000);
+}
+
+// 捕获所有错误
+window.addEventListener('error', function(e) {
+    console.error('全局错误:', e);
+    showError(`错误: ${e.message}\n文件: ${e.filename}\n行号: ${e.lineno}`);
+});
+
+// 捕获Promise错误
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('Promise错误:', e);
+    showError(`Promise错误: ${e.reason}`);
+});
+
+// 文件验证函数
+function validateFile(file) {
+    // 检查文件大小
+    if (file.size > 25 * 1024 * 1024) {
+        throw new Error('文件大小不能超过25MB');
+    }
+    
+    // 检查文件名
+    const invalidChars = /[<>:"/\\|?*\x00-\x1F]/g;
+    if (invalidChars.test(file.name)) {
+        throw new Error('文件名包含无效字符');
+    }
+    
+    // 检查文件类型（可选）
+    const dangerousExtensions = ['.exe', '.bat', '.cmd', '.sh'];
+    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+    if (dangerousExtensions.includes(fileExtension)) {
+        if (!confirm('警告：您正在上传可执行文件，确定要继续吗？')) {
+            throw new Error('用户取消上传');
+        }
+    }
+    
+    return true;
+}
+
+// GitHub API 上传文件
+async function uploadFileToGitHub(file, token) {
+    try {
+        // 读取文件为Base64
+        const content = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+        // 直接在根目录创建文件
+        const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${encodeURIComponent(file.name)}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: `Upload file: ${file.name}`,
+                content: content.split(',')[1] // 移除Base64前缀
+            })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+            console.log('文件上传成功:', result);
+            return true;
+        } else {
+            console.error('上传失败:', result);
+            // 提供更详细的错误信息
+            if (result.message && result.message.includes('already exists')) {
+                throw new Error('文件已存在，请重命名文件或删除原有文件');
+            } else if (result.message && result.message.includes('Invalid request')) {
+                throw new Error('文件路径无效，请确保文件名不含特殊字符');
+            } else {
+                throw new Error(result.message || `上传失败: ${response.status}`);
+            }
+        }
+    } catch (error) {
+        console.error('上传错误:', error);
+        throw error;
+    }
+}
+
+// GitHub API 删除文件
+async function deleteFileFromGitHub(filename, sha, token) {
+    try {
+        const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${encodeURIComponent(filename)}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: `Delete file: ${filename}`,
+                sha: sha
+            })
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+            console.log('文件删除成功:', result);
+            return true;
+        } else {
+            console.error('删除失败:', result);
+            throw new Error(result.message || `删除失败: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('删除错误:', error);
+        throw error;
+    }
+}
+
 // 初始化云盘
 function initCloudDrive() {
     cloudDrive = new CloudDrive();
@@ -86,13 +238,15 @@ class CloudDrive {
     async loadFiles() {
         try {
             const apiUrl = `https://api.github.com/repos/${CONFIG.repo}/git/trees/main?recursive=1`;
+            console.log('加载文件列表:', apiUrl);
             const response = await fetch(apiUrl);
             
             if (!response.ok) {
-                throw new Error('无法加载文件列表');
+                throw new Error(`无法加载文件列表: ${response.status}`);
             }
             
             const data = await response.json();
+            console.log('文件数据:', data);
             
             this.files = data.tree
                 .filter(item => item.type === 'blob')
@@ -108,9 +262,11 @@ class CloudDrive {
                     sha: item.sha
                 }));
                 
+            console.log('处理后的文件列表:', this.files);
+                
         } catch (error) {
             console.error('加载文件失败:', error);
-            this.showError('无法加载文件列表，请检查网络连接');
+            this.showError('无法加载文件列表: ' + error.message);
         }
     }
 
@@ -217,36 +373,34 @@ class CloudDrive {
     }
 
     async handleFileUpload(file) {
-        if (file.size > 25 * 1024 * 1024) {
-            alert('文件大小不能超过25MB');
-            return;
-        }
-
-        const token = localStorage.getItem('github_token');
-        if (!token || (!token.startsWith('ghp_') && !token.startsWith('gho_'))) {
-            alert('请先设置GitHub Token才能上传文件');
-            manageGitHubToken();
-            return;
-        }
-
-        const uploadProgress = document.getElementById('uploadProgress');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-
-        // 显示上传进度
-        uploadProgress.classList.remove('hidden');
-        progressFill.style.width = '0%';
-        progressText.textContent = '准备上传... 0%';
-
         try {
-            // 模拟上传过程
-            for (let i = 0; i <= 100; i += 10) {
-                await new Promise(resolve => setTimeout(resolve, 200));
-                progressFill.style.width = i + '%';
-                progressText.textContent = `上传中... ${i}%`;
+            // 验证文件
+            validateFile(file);
+            
+            const token = localStorage.getItem('github_token');
+            if (!token || (!token.startsWith('ghp_') && !token.startsWith('gho_'))) {
+                showError('请先设置GitHub Token才能上传文件');
+                manageGitHubToken();
+                return;
             }
 
-            // 实际使用GitHub API上传
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            // 显示上传进度
+            uploadProgress.classList.remove('hidden');
+            progressFill.style.width = '0%';
+            progressText.textContent = '准备上传... 0%';
+
+            // 更新进度
+            progressFill.style.width = '30%';
+            progressText.textContent = '验证文件中... 30%';
+
+            // 实际上传
+            progressFill.style.width = '60%';
+            progressText.textContent = '上传中... 60%';
+
             const success = await uploadFileToGitHub(file, token);
             
             if (success) {
@@ -263,8 +417,9 @@ class CloudDrive {
             }
             
         } catch (error) {
-            uploadProgress.classList.add('hidden');
-            alert('上传失败: ' + error.message);
+            const uploadProgress = document.getElementById('uploadProgress');
+            if (uploadProgress) uploadProgress.classList.add('hidden');
+            showError('上传失败: ' + error.message);
         }
     }
 
@@ -275,7 +430,7 @@ class CloudDrive {
 
         const token = localStorage.getItem('github_token');
         if (!token) {
-            alert('请先设置GitHub Token才能删除文件');
+            showError('请先设置GitHub Token才能删除文件');
             manageGitHubToken();
             return;
         }
@@ -291,7 +446,7 @@ class CloudDrive {
             }
             
         } catch (error) {
-            alert('删除失败: ' + error.message);
+            showError('删除失败: ' + error.message);
         }
     }
 }
@@ -329,7 +484,8 @@ function manageGitHubToken() {
             '所需权限：\n' +
             '✅ repo - 完全控制仓库\n' +
             '✅ delete_repo - 删除文件\n\n' +
-            '获取地址：https://github.com/settings/tokens'
+            '获取地址：https://github.com/settings/tokens\n\n' +
+            '当前Token: ' + (token || '未设置')
         );
         
         if (newToken && newToken.trim()) {
@@ -340,78 +496,46 @@ function manageGitHubToken() {
                 }
                 showMessage('Token 保存成功！', 'success');
             } else {
-                alert('Token格式不正确，请检查是否复制完整');
+                showError('Token格式不正确，请检查是否复制完整');
             }
         }
     }
 }
 
-// 显示消息
-function showMessage(message, type = 'info') {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${type}`;
-    messageDiv.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(messageDiv);
-    
-    setTimeout(() => {
-        messageDiv.remove();
-    }, 3000);
-}
-
-// GitHub API 上传文件
-async function uploadFileToGitHub(file, token) {
-    try {
-        // 读取文件为Base64
-        const content = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-
-        const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${encodeURIComponent(file.name)}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message: `Upload file: ${file.name}`,
-                content: content.split(',')[1]
-            })
-        });
-
-        return response.ok;
-    } catch (error) {
-        console.error('上传错误:', error);
-        return false;
+// 测试上传功能
+function testUpload() {
+    const token = localStorage.getItem('github_token');
+    if (!token) {
+        showError('请先设置GitHub Token');
+        return;
     }
-}
 
-// GitHub API 删除文件
-async function deleteFileFromGitHub(filename, sha, token) {
-    try {
-        const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${encodeURIComponent(filename)}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message: `Delete file: ${filename}`,
-                sha: sha
-            })
-        });
-
-        return response.ok;
-    } catch (error) {
-        console.error('删除错误:', error);
-        return false;
-    }
+    const testContent = '测试文件内容 ' + new Date().toLocaleString();
+    const contentB64 = btoa(unescape(encodeURIComponent(testContent)));
+    
+    fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/test-${Date.now()}.txt`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `token ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            message: '测试上传',
+            content: contentB64
+        })
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.content) {
+            showMessage('测试上传成功！', 'success');
+            if (cloudDrive) cloudDrive.init();
+        } else {
+            showError('测试失败: ' + (result.message || '未知错误'));
+        }
+    })
+    .catch(error => {
+        showError('测试错误: ' + error.message);
+    });
 }
 
 // 页面加载完成后初始化
@@ -427,3 +551,6 @@ window.filterFiles = filterFiles;
 window.selectFile = selectFile;
 window.manageGitHubToken = manageGitHubToken;
 window.initCloudDrive = initCloudDrive;
+window.testUpload = testUpload;
+window.showError = showError;
+window.showMessage = showMessage;
