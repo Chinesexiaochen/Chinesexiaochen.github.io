@@ -6,24 +6,12 @@ const CONFIG = {
 
 // 文件类型图标映射
 const FILE_ICONS = {
-    'pdf': '📕',
-    'doc': '📘',
-    'docx': '📘',
-    'txt': '📄',
-    'jpg': '🖼️',
-    'jpeg': '🖼️',
-    'png': '🖼️',
-    'gif': '🖼️',
-    'mp4': '🎬',
-    'avi': '🎬',
-    'mov': '🎬',
-    'mp3': '🎵',
-    'wav': '🎵',
-    'zip': '📦',
-    'rar': '📦',
-    '7z': '📦',
-    'exe': '⚙️',
-    'msi': '⚙️',
+    'pdf': '📕', 'doc': '📘', 'docx': '📘', 'txt': '📄',
+    'jpg': '🖼️', 'jpeg': '🖼️', 'png': '🖼️', 'gif': '🖼️',
+    'mp4': '🎬', 'avi': '🎬', 'mov': '🎬',
+    'mp3': '🎵', 'wav': '🎵',
+    'zip': '📦', 'rar': '📦', '7z': '📦',
+    'exe': '⚙️', 'msi': '⚙️',
     'default': '📁'
 };
 
@@ -32,78 +20,13 @@ let cloudDrive;
 
 // 错误显示函数
 function showError(message) {
-    // 创建错误面板
-    let errorPanel = document.getElementById('errorPanel');
-    if (!errorPanel) {
-        errorPanel = document.createElement('div');
-        errorPanel.id = 'errorPanel';
-        errorPanel.className = 'error-panel';
-        errorPanel.innerHTML = `
-            <div class="error-content">
-                <h3>🚨 错误信息</h3>
-                <div id="errorMessage"></div>
-            </div>
-            <button class="close-error" onclick="document.getElementById('errorPanel').classList.remove('show')">关闭</button>
-        `;
-        document.body.appendChild(errorPanel);
-    }
-    
-    const errorMessage = document.getElementById('errorMessage');
-    errorMessage.textContent = message;
-    errorPanel.classList.add('show');
+    alert('❌ ' + message); // 先用简单的alert
+    console.error('错误:', message);
 }
 
 // 显示消息
 function showMessage(message, type = 'info') {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${type}`;
-    messageDiv.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(messageDiv);
-    
-    setTimeout(() => {
-        messageDiv.remove();
-    }, 3000);
-}
-
-// 捕获所有错误
-window.addEventListener('error', function(e) {
-    console.error('全局错误:', e);
-    showError(`错误: ${e.message}\n文件: ${e.filename}\n行号: ${e.lineno}`);
-});
-
-// 捕获Promise错误
-window.addEventListener('unhandledrejection', function(e) {
-    console.error('Promise错误:', e);
-    showError(`Promise错误: ${e.reason}`);
-});
-
-// 文件验证函数
-function validateFile(file) {
-    // 检查文件大小
-    if (file.size > 25 * 1024 * 1024) {
-        throw new Error('文件大小不能超过25MB');
-    }
-    
-    // 检查文件名
-    const invalidChars = /[<>:"/\\|?*\x00-\x1F]/g;
-    if (invalidChars.test(file.name)) {
-        throw new Error('文件名包含无效字符');
-    }
-    
-    // 检查文件类型（可选）
-    const dangerousExtensions = ['.exe', '.bat', '.cmd', '.sh'];
-    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
-    if (dangerousExtensions.includes(fileExtension)) {
-        if (!confirm('警告：您正在上传可执行文件，确定要继续吗？')) {
-            throw new Error('用户取消上传');
-        }
-    }
-    
-    return true;
+    alert((type === 'success' ? '✅ ' : 'ℹ️ ') + message);
 }
 
 // 简化的上传函数
@@ -118,7 +41,7 @@ async function uploadFileToGitHub(file, token) {
                 const content = reader.result;
                 console.log('文件读取完成，内容长度:', content.length);
                 
-                const contentB64 = content.split(',')[1]; // 移除data:URL前缀
+                const contentB64 = content.split(',')[1];
                 console.log('Base64内容长度:', contentB64.length);
                 
                 console.log('开始API调用...');
@@ -169,11 +92,6 @@ async function uploadFileToGitHub(file, token) {
             reject(new Error('文件读取失败'));
         };
         
-        reader.onabort = function() {
-            console.error('文件读取被中止');
-            reject(new Error('文件读取被取消'));
-        };
-        
         console.log('开始读取文件...');
         reader.readAsDataURL(file);
     });
@@ -182,7 +100,7 @@ async function uploadFileToGitHub(file, token) {
 // GitHub API 删除文件
 async function deleteFileFromGitHub(filename, sha, token) {
     try {
-        const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${encodeURIComponent(filename)}`, {
+        const response = await fetch(`https://api.github.com/repos/Chinesexiaochen/mycloudrive.github.io/contents/${encodeURIComponent(filename)}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `token ${token}`,
@@ -194,19 +112,25 @@ async function deleteFileFromGitHub(filename, sha, token) {
             })
         });
 
-        const result = await response.json();
-        
-        if (response.ok) {
-            console.log('文件删除成功:', result);
-            return true;
-        } else {
-            console.error('删除失败:', result);
-            throw new Error(result.message || `删除失败: ${response.status}`);
-        }
+        return response.ok;
     } catch (error) {
         console.error('删除错误:', error);
-        throw error;
+        return false;
     }
+}
+
+// 文件验证函数
+function validateFile(file) {
+    if (file.size > 25 * 1024 * 1024) {
+        throw new Error('文件大小不能超过25MB');
+    }
+    
+    const invalidChars = /[<>:"/\\|?*\x00-\x1F]/g;
+    if (invalidChars.test(file.name)) {
+        throw new Error('文件名包含无效字符');
+    }
+    
+    return true;
 }
 
 // 初始化云盘
@@ -229,7 +153,6 @@ class CloudDrive {
     }
 
     initEventListeners() {
-        // 文件选择事件
         const fileInput = document.getElementById('fileInput');
         if (fileInput) {
             fileInput.addEventListener('change', (e) => {
@@ -240,7 +163,6 @@ class CloudDrive {
             });
         }
 
-        // 拖拽上传
         const uploadArea = document.getElementById('uploadArea');
         if (uploadArea) {
             uploadArea.addEventListener('dragover', (e) => {
@@ -265,7 +187,6 @@ class CloudDrive {
     async loadFiles() {
         try {
             const apiUrl = `https://api.github.com/repos/${CONFIG.repo}/git/trees/main?recursive=1`;
-            console.log('加载文件列表:', apiUrl);
             const response = await fetch(apiUrl);
             
             if (!response.ok) {
@@ -273,7 +194,6 @@ class CloudDrive {
             }
             
             const data = await response.json();
-            console.log('文件数据:', data);
             
             this.files = data.tree
                 .filter(item => item.type === 'blob')
@@ -289,8 +209,6 @@ class CloudDrive {
                     sha: item.sha
                 }));
                 
-            console.log('处理后的文件列表:', this.files);
-                
         } catch (error) {
             console.error('加载文件失败:', error);
             this.showError('无法加载文件列表: ' + error.message);
@@ -298,10 +216,7 @@ class CloudDrive {
     }
 
     isSystemFile(filename) {
-        const systemFiles = [
-            '.gitignore', 'README.md', 'index.html', 
-            'style.css', 'script.js', 'auth.js', 'github-uploader.js'
-        ];
+        const systemFiles = ['.gitignore', 'README.md', 'index.html', 'style.css', 'script.js', 'auth.js'];
         return systemFiles.includes(filename);
     }
 
@@ -401,7 +316,6 @@ class CloudDrive {
 
     async handleFileUpload(file) {
         try {
-            // 验证文件
             validateFile(file);
             
             const token = localStorage.getItem('github_token');
@@ -415,16 +329,13 @@ class CloudDrive {
             const progressFill = document.getElementById('progressFill');
             const progressText = document.getElementById('progressText');
 
-            // 显示上传进度
             uploadProgress.classList.remove('hidden');
             progressFill.style.width = '0%';
             progressText.textContent = '准备上传... 0%';
 
-            // 更新进度
             progressFill.style.width = '30%';
             progressText.textContent = '验证文件中... 30%';
 
-            // 实际上传
             progressFill.style.width = '60%';
             progressText.textContent = '上传中... 60%';
 
@@ -451,27 +362,23 @@ class CloudDrive {
     }
 
     async deleteFile(filename, sha) {
-        if (!confirm(`确定要删除文件 "${filename}" 吗？此操作不可撤销。`)) {
-            return;
-        }
+        if (!confirm(`确定要删除文件 "${filename}" 吗？`)) return;
 
         const token = localStorage.getItem('github_token');
         if (!token) {
-            showError('请先设置GitHub Token才能删除文件');
+            showError('请先设置GitHub Token');
             manageGitHubToken();
             return;
         }
 
         try {
             const success = await deleteFileFromGitHub(filename, sha, token);
-            
             if (success) {
                 await this.init();
                 showMessage('文件删除成功！', 'success');
             } else {
                 throw new Error('删除失败');
             }
-            
         } catch (error) {
             showError('删除失败: ' + error.message);
         }
@@ -482,9 +389,7 @@ class CloudDrive {
 function filterFiles() {
     if (!cloudDrive) return;
     const searchTerm = document.getElementById('search').value.toLowerCase();
-    const filteredFiles = cloudDrive.files.filter(file => 
-        file.name.toLowerCase().includes(searchTerm)
-    );
+    const filteredFiles = cloudDrive.files.filter(file => file.name.toLowerCase().includes(searchTerm));
     cloudDrive.renderFileList(filteredFiles);
 }
 
@@ -497,33 +402,21 @@ function selectFile() {
 function manageGitHubToken() {
     const token = localStorage.getItem('github_token');
     
-    if (token && (token.startsWith('ghp_') || token.startsWith('gho_'))) {
-        if (confirm('确定要移除已保存的GitHub Token吗？')) {
+    if (token) {
+        if (confirm('确定要移除Token吗？')) {
             localStorage.removeItem('github_token');
-            if (cloudDrive) {
-                cloudDrive.updateAuthStatus();
-            }
+            if (cloudDrive) cloudDrive.updateAuthStatus();
             showMessage('Token 已移除', 'info');
         }
     } else {
-        const newToken = prompt(
-            '请输入 GitHub Personal Access Token：\n\n' +
-            '所需权限：\n' +
-            '✅ repo - 完全控制仓库\n' +
-            '✅ delete_repo - 删除文件\n\n' +
-            '获取地址：https://github.com/settings/tokens\n\n' +
-            '当前Token: ' + (token || '未设置')
-        );
-        
+        const newToken = prompt('请输入GitHub Token:\n\n权限要求: repo, delete_repo\n\n获取: https://github.com/settings/tokens');
         if (newToken && newToken.trim()) {
             if (newToken.startsWith('ghp_') || newToken.startsWith('gho_')) {
                 localStorage.setItem('github_token', newToken.trim());
-                if (cloudDrive) {
-                    cloudDrive.updateAuthStatus();
-                }
+                if (cloudDrive) cloudDrive.updateAuthStatus();
                 showMessage('Token 保存成功！', 'success');
             } else {
-                showError('Token格式不正确，请检查是否复制完整');
+                showError('Token格式不正确');
             }
         }
     }
@@ -537,10 +430,10 @@ function testUpload() {
         return;
     }
 
-    const testContent = '测试文件内容 ' + new Date().toLocaleString();
+    const testContent = '测试文件 ' + new Date().toLocaleString();
     const contentB64 = btoa(unescape(encodeURIComponent(testContent)));
     
-    fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/test-${Date.now()}.txt`, {
+    fetch(`https://api.github.com/repos/Chinesexiaochen/mycloudrive.github.io/contents/test-${Date.now()}.txt`, {
         method: 'PUT',
         headers: {
             'Authorization': `token ${token}`,
@@ -567,8 +460,7 @@ function testUpload() {
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('mainContainer') && 
-        !document.getElementById('mainContainer').classList.contains('hidden')) {
+    if (document.getElementById('mainContainer') && !document.getElementById('mainContainer').classList.contains('hidden')) {
         initCloudDrive();
     }
 });
@@ -579,5 +471,3 @@ window.selectFile = selectFile;
 window.manageGitHubToken = manageGitHubToken;
 window.initCloudDrive = initCloudDrive;
 window.testUpload = testUpload;
-window.showError = showError;
-window.showMessage = showMessage;
