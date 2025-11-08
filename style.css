@@ -442,7 +442,14 @@ header::before {
     overflow: hidden;
     margin-bottom: 12px;
 }
-/* 搜索区域 */
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-blue), var(--accent-color));
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 5px;
+}/* 搜索区域 */
 .search-section {
     padding: 28px 30px;
     background: linear-gradient(135deg, var(--bg-light), var(--bg-lighter));
@@ -494,6 +501,12 @@ header::before {
     gap: 15px;
 }
 
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 .auth-status {
     padding: 8px 16px;
     border-radius: 20px;
@@ -518,7 +531,7 @@ header::before {
     background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 16px;
     border-radius: var(--border-radius-sm);
     font-size: 0.9em;
     cursor: pointer;
@@ -527,11 +540,20 @@ header::before {
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
 }
 
 .auth-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+}
+
+.auth-btn.secondary {
+    background: var(--accent-color);
+}
+
+.auth-btn.secondary:hover {
+    box-shadow: 0 6px 20px rgba(76, 201, 240, 0.3);
 }
 
 /* 文件列表 */
@@ -869,6 +891,15 @@ footer i {
     .auth-section {
         flex-direction: column;
         align-items: stretch;
+        gap: 15px;
+    }
+    
+    .auth-buttons {
+        flex-direction: column;
+    }
+    
+    .auth-btn {
+        justify-content: center;
     }
     
     .message {
@@ -918,6 +949,11 @@ footer i {
     
     .file-actions {
         flex-direction: column;
+    }
+    
+    .auth-btn {
+        padding: 12px;
+        font-size: 0.85em;
     }
 }
 
@@ -987,11 +1023,4 @@ button:disabled:hover {
     body {
         background: white !important;
     }
-}
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary-blue), var(--accent-color));
-    width: 0%;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 5px;
 }
