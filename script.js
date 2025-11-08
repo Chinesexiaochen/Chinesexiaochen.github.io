@@ -46,7 +46,10 @@ async function uploadFileToGitHub(file, token) {
                 
                 console.log('开始API调用...');
                 
-                const response = await fetch(`https://api.github.com/repos/Chinesexiaochen/mycloudrive.github.io/contents/${encodeURIComponent(file.name)}`, {
+                const CONFIG = {
+    repo: 'Chinesexiaochen/Chinesexiaochen.github.io',  // ✅ 正确的
+    username: 'Chinesexiaochen'
+}; {
                     method: 'PUT',
                     headers: {
                         'Authorization': `token ${token}`,
