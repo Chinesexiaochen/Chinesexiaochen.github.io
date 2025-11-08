@@ -106,50 +106,77 @@ function validateFile(file) {
     return true;
 }
 
-// GitHub API 上传文件
+// 简化的上传函数
 async function uploadFileToGitHub(file, token) {
-    try {
-        // 读取文件为Base64
-        const content = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-
-        // 直接在根目录创建文件
-        const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${encodeURIComponent(file.name)}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message: `Upload file: ${file.name}`,
-                content: content.split(',')[1] // 移除Base64前缀
-            })
-        });
-
-        const result = await response.json();
+    console.log('开始上传文件:', file.name, '大小:', file.size, '类型:', file.type);
+    
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
         
-        if (response.ok) {
-            console.log('文件上传成功:', result);
-            return true;
-        } else {
-            console.error('上传失败:', result);
-            // 提供更详细的错误信息
-            if (result.message && result.message.includes('already exists')) {
-                throw new Error('文件已存在，请重命名文件或删除原有文件');
-            } else if (result.message && result.message.includes('Invalid request')) {
-                throw new Error('文件路径无效，请确保文件名不含特殊字符');
-            } else {
-                throw new Error(result.message || `上传失败: ${response.status}`);
+        reader.onload = async function() {
+            try {
+                const content = reader.result;
+                console.log('文件读取完成，内容长度:', content.length);
+                
+                const contentB64 = content.split(',')[1]; // 移除data:URL前缀
+                console.log('Base64内容长度:', contentB64.length);
+                
+                console.log('开始API调用...');
+                
+                const response = await fetch(`https://api.github.com/repos/Chinesexiaochen/mycloudrive.github.io/contents/${encodeURIComponent(file.name)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: `Upload file: ${file.name}`,
+                        content: contentB64
+                    })
+                });
+                
+                console.log('API响应状态:', response.status);
+                const result = await response.json();
+                console.log('API响应结果:', result);
+                
+                if (response.ok) {
+                    console.log('✅ 上传成功！');
+                    resolve(true);
+                } else {
+                    console.error('❌ 上传失败:', result);
+                    let errorMsg = result.message || `上传失败: ${response.status}`;
+                    
+                    if (response.status === 401) {
+                        errorMsg = 'Token无效或已过期，请重新设置';
+                    } else if (response.status === 403) {
+                        errorMsg = '权限不足，请检查Token权限';
+                    } else if (response.status === 404) {
+                        errorMsg = '仓库不存在或无权访问';
+                    } else if (response.status === 422) {
+                        errorMsg = '文件已存在或路径无效';
+                    }
+                    
+                    reject(new Error(errorMsg));
+                }
+            } catch (error) {
+                console.error('上传过程错误:', error);
+                reject(error);
             }
-        }
-    } catch (error) {
-        console.error('上传错误:', error);
-        throw error;
-    }
+        };
+        
+        reader.onerror = function() {
+            console.error('文件读取错误');
+            reject(new Error('文件读取失败'));
+        };
+        
+        reader.onabort = function() {
+            console.error('文件读取被中止');
+            reject(new Error('文件读取被取消'));
+        };
+        
+        console.log('开始读取文件...');
+        reader.readAsDataURL(file);
+    });
 }
 
 // GitHub API 删除文件
