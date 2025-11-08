@@ -1,198 +1,509 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 MyCloudrive - 智能云盘</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- 错误显示面板样式 -->
+    <title>我的世界 - 网页版</title>
     <style>
-    .error-panel {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #ff4444;
-        color: white;
-        padding: 20px;
-        border-radius: 10px;
-        z-index: 10000;
-        max-width: 90%;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        display: none;
-    }
-    .error-panel.show {
-        display: block;
-    }
-    .error-content {
-        margin-bottom: 15px;
-    }
-    .error-content h3 {
-        margin: 0 0 10px 0;
-        font-size: 1.2em;
-    }
-    .close-error {
-        background: white;
-        color: #ff4444;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 4px solid #8B4513;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            text-shadow: 3px 3px 0 #000;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .game-area {
+            flex: 1;
+            min-width: 300px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 4px solid #8B4513;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .game-title {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #FFD700;
+            font-size: 1.5rem;
+        }
+        
+        .world {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-gap: 5px;
+            margin: 0 auto;
+            max-width: 500px;
+        }
+        
+        .block {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(0, 0, 0, 0.5);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        .block:hover {
+            transform: scale(1.1);
+        }
+        
+        .block:active {
+            transform: scale(0.95);
+        }
+        
+        .grass {
+            background-color: #4CAF50;
+        }
+        
+        .dirt {
+            background-color: #8B4513;
+        }
+        
+        .stone {
+            background-color: #808080;
+        }
+        
+        .water {
+            background-color: #1E90FF;
+        }
+        
+        .wood {
+            background-color: #A0522D;
+        }
+        
+        .leaves {
+            background-color: #228B22;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #45a049;
+        }
+        
+        .inventory {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .inventory-item {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .inventory-item:hover {
+            transform: scale(1.1);
+        }
+        
+        .selected {
+            border: 3px solid #FF4500;
+            box-shadow: 0 0 10px #FF4500;
+        }
+        
+        .character {
+            width: 60px;
+            height: 80px;
+            background-color: #8B4513;
+            margin: 0 auto 20px;
+            position: relative;
+            border-radius: 5px;
+        }
+        
+        .character-head {
+            width: 50px;
+            height: 50px;
+            background-color: #FFD700;
+            border-radius: 5px;
+            position: absolute;
+            top: -40px;
+            left: 5px;
+        }
+        
+        .character-body {
+            width: 40px;
+            height: 40px;
+            background-color: #4CAF50;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            border-radius: 3px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            color: #FFD700;
+        }
+        
+        .crafting {
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .crafting-title {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+        
+        .crafting-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 5px;
+            max-width: 150px;
+            margin: 0 auto;
+        }
+        
+        .crafting-slot {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid #FFD700;
+            border-radius: 3px;
+        }
+        
+        .crafting-result {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            color: #FFD700;
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                flex-direction: column;
+            }
+            
+            .block {
+                width: 30px;
+                height: 30px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* 云朵 */
+        .cloud {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            z-index: -1;
+        }
+        
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 10%;
+            left: 5%;
+        }
+        
+        .cloud2 {
+            width: 150px;
+            height: 60px;
+            top: 20%;
+            right: 10%;
+        }
+        
+        .cloud3 {
+            width: 120px;
+            height: 50px;
+            bottom: 20%;
+            left: 15%;
+        }
     </style>
 </head>
 <body>
-    <!-- 错误显示面板 -->
-    <div id="errorPanel" class="error-panel">
-        <div class="error-content">
-            <h3>🚨 错误信息</h3>
-            <div id="errorMessage"></div>
-        </div>
-        <button class="close-error" onclick="document.getElementById('errorPanel').classList.remove('show')">关闭</button>
-    </div>
-
-    <!-- 密码认证页面 -->
-    <div id="authContainer" class="auth-container">
-        <div class="auth-box">
-            <div class="auth-header">
-                <i class="fas fa-lock"></i>
-                <h1>私人云盘访问</h1>
-                <p>请输入访问密码进入云盘系统</p>
-            </div>
-            
-            <div class="auth-form">
-                <div class="input-group">
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="passwordInput" placeholder="请输入访问密码" maxlength="6">
-                    <button class="toggle-password" onclick="togglePasswordVisibility()">
-                        <i class="fas fa-eye"></i>
-                    </button>
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+    
+    <div class="container">
+        <header>
+            <h1>我的世界 - 网页版</h1>
+            <p class="subtitle">探索、建造、生存！</p>
+        </header>
+        
+        <div class="game-container">
+            <div class="game-area">
+                <h2 class="game-title">方块世界</h2>
+                <div class="world" id="world">
+                    <!-- 方块将通过JavaScript生成 -->
                 </div>
                 
-                <div class="password-hint">
-                    <span>提示：6位数字密码</span>
+                <div class="controls">
+                    <button class="btn" id="mine-btn">挖掘方块</button>
+                    <button class="btn" id="place-btn">放置方块</button>
+                    <button class="btn" id="reset-btn">重置世界</button>
                 </div>
                 
-                <button class="auth-btn" onclick="checkPassword()">
-                    <i class="fas fa-sign-in-alt"></i> 进入云盘
-                </button>
-                
-                <div class="auth-error hidden" id="errorMessage">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>密码错误，请重新输入</span>
+                <div class="inventory" id="inventory">
+                    <div class="inventory-item grass selected" data-type="grass"></div>
+                    <div class="inventory-item dirt" data-type="dirt"></div>
+                    <div class="inventory-item stone" data-type="stone"></div>
+                    <div class="inventory-item wood" data-type="wood"></div>
+                    <div class="inventory-item leaves" data-type="leaves"></div>
                 </div>
             </div>
             
-            <div class="auth-footer">
-                <p>🔒 受保护的私人存储空间</p>
+            <div class="game-area">
+                <h2 class="game-title">玩家状态</h2>
+                <div class="character floating">
+                    <div class="character-head"></div>
+                    <div class="character-body"></div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-label">生命值</div>
+                        <div class="stat-value" id="health">20</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">饥饿值</div>
+                        <div class="stat-value" id="hunger">20</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">经验值</div>
+                        <div class="stat-value" id="xp">0</div>
+                    </div>
+                </div>
+                
+                <div class="crafting">
+                    <h3 class="crafting-title">合成台</h3>
+                    <div class="crafting-grid">
+                        <div class="crafting-slot"></div>
+                        <div class="crafting-slot"></div>
+                        <div class="crafting-slot"></div>
+                        <div class="crafting-slot"></div>
+                        <div class="crafting-slot"></div>
+                        <div class="crafting-slot"></div>
+                        <div class="crafting-slot"></div>
+                        <div class="crafting-slot"></div>
+                        <div class="crafting-slot"></div>
+                    </div>
+                    <div class="crafting-result">
+                        <div class="inventory-item wood"></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="btn">合成</button>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <footer>
+            <p>我的世界网页版 - 使用HTML、CSS和JavaScript创建</p>
+            <p>注意：这是一个简化版演示，并非官方Minecraft游戏</p>
+        </footer>
     </div>
 
-    <!-- 主云盘内容（默认隐藏） -->
-    <div id="mainContainer" class="main-container hidden">
-        <div class="container">
-            <!-- 头部 -->
-            <header>
-                <div class="header-content">
-                    <h1><i class="fas fa-cloud"></i> 私人云盘</h1>
-                    <p>安全加密的文件存储服务</p>
-                    <div class="header-actions">
-                        <div class="stats" id="stats">
-                            <span><i class="fas fa-spinner fa-spin"></i> 加载中...</span>
-                        </div>
-                        <button class="logout-btn" onclick="logout()">
-                            <i class="fas fa-sign-out-alt"></i> 退出
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <!-- 控制面板 -->
-            <section class="control-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-cogs"></i> 文件管理</h2>
-                </div>
+    <script>
+        // 生成方块世界
+        const world = document.getElementById('world');
+        const blockTypes = ['grass', 'dirt', 'stone', 'water', 'wood', 'leaves'];
+        
+        // 创建10x10的方块世界
+        for (let i = 0; i < 100; i++) {
+            const block = document.createElement('div');
+            // 随机分配方块类型，但确保第一行是草方块
+            if (i < 10) {
+                block.className = 'block grass';
+            } else if (i < 30) {
+                block.className = 'block dirt';
+            } else if (i < 60) {
+                block.className = 'block stone';
+            } else if (i < 70) {
+                block.className = 'block water';
+            } else if (i < 85) {
+                block.className = 'block wood';
+            } else {
+                block.className = 'block leaves';
+            }
+            
+            block.setAttribute('data-type', block.className.split(' ')[1]);
+            world.appendChild(block);
+        }
+        
+        // 库存选择
+        const inventoryItems = document.querySelectorAll('.inventory-item');
+        let selectedBlockType = 'grass';
+        
+        inventoryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                inventoryItems.forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedBlockType = this.getAttribute('data-type');
+            });
+        });
+        
+        // 挖掘方块功能
+        document.getElementById('mine-btn').addEventListener('click', function() {
+            alert('挖掘了 ' + selectedBlockType + ' 方块！');
+            // 在实际游戏中，这里会移除方块并添加到玩家库存
+        });
+        
+        // 放置方块功能
+        document.getElementById('place-btn').addEventListener('click', function() {
+            alert('放置了 ' + selectedBlockType + ' 方块！');
+            // 在实际游戏中，这里会从玩家库存移除方块并在世界中放置
+        });
+        
+        // 重置世界
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            if (confirm('确定要重置世界吗？')) {
+                location.reload();
+            }
+        });
+        
+        // 方块点击交互
+        const blocks = document.querySelectorAll('.block');
+        blocks.forEach(block => {
+            block.addEventListener('click', function() {
+                const type = this.getAttribute('data-type');
+                alert('点击了 ' + type + ' 方块！');
                 
-                <!-- 上传区域 -->
-                <div class="upload-section">
-                    <div class="upload-area" id="uploadArea">
-                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                        <h3>点击或拖拽文件到此处上传</h3>
-                        <p>支持单个文件上传，最大25MB</p>
-                        <input type="file" id="fileInput" hidden>
-                        <button class="upload-btn" onclick="selectFile()">
-                            <i class="fas fa-plus"></i> 选择文件
-                        </button>
-                    </div>
-                    <div class="upload-progress hidden" id="uploadProgress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFill"></div>
-                        </div>
-                        <span id="progressText">上传中... 0%</span>
-                    </div>
-                </div>
-
-                <!-- 搜索和筛选 -->
-                <div class="search-section">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="search" placeholder="搜索文件..." onkeyup="filterFiles()">
-                    </div>
-                </div>
-
-                <!-- GitHub认证状态 -->
-                <div class="auth-section">
-                    <div class="auth-status not-authenticated" id="authStatus">
-                        <i class="fas fa-times-circle"></i> 未认证
-                    </div>
-                    <div class="auth-buttons">
-                        <button class="auth-btn" onclick="manageGitHubToken()">
-                            <i class="fas fa-key"></i> 管理 GitHub Token
-                        </button>
-                        <button class="auth-btn secondary" onclick="testUpload()" style="background: var(--accent-color);">
-                            <i class="fas fa-vial"></i> 测试上传
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 文件列表 -->
-            <section class="file-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-folder"></i> 文件列表</h2>
-                    <div class="file-count" id="fileCount">0 个文件</div>
-                </div>
-                
-                <div id="fileList" class="file-grid">
-                    <div class="loading">
-                        <i class="fas fa-spinner fa-spin"></i> 加载文件中...
-                    </div>
-                </div>
-            </section>
-
-            <!-- 底部 -->
-            <footer>
-                <p>
-                    <i class="fas fa-shield-alt"></i> 
-                    安全认证访问 | 
-                    <i class="fas fa-clock"></i> 
-                    最后登录: <span id="loginTime"></span>
-                </p>
-            </footer>
-        </div>
-    </div>
-
-    <!-- 加载脚本 -->
-    <script src="auth.js"></script>
-    <script src="script.js"></script>
+                // 添加点击效果
+                this.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
+            });
+        });
+        
+        // 简单的状态变化（演示用）
+        setInterval(() => {
+            const health = document.getElementById('health');
+            const hunger = document.getElementById('hunger');
+            const xp = document.getElementById('xp');
+            
+            // 随机变化状态值（在实际游戏中这些值会根据玩家行动变化）
+            let healthVal = parseInt(health.textContent);
+            let hungerVal = parseInt(hunger.textContent);
+            let xpVal = parseInt(xp.textContent);
+            
+            // 随机小幅度变化
+            healthVal = Math.max(1, healthVal + Math.floor(Math.random() * 3) - 1);
+            hungerVal = Math.max(0, hungerVal + Math.floor(Math.random() * 3) - 1);
+            xpVal += Math.floor(Math.random() * 2);
+            
+            health.textContent = healthVal;
+            hunger.textContent = hungerVal;
+            xp.textContent = xpVal;
+        }, 3000);
+    </script>
 </body>
 </html>
