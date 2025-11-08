@@ -9,8 +9,54 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 错误显示面板样式 -->
+    <style>
+    .error-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ff4444;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 10000;
+        max-width: 90%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        display: none;
+    }
+    .error-panel.show {
+        display: block;
+    }
+    .error-content {
+        margin-bottom: 15px;
+    }
+    .error-content h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.2em;
+    }
+    .close-error {
+        background: white;
+        color: #ff4444;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    </style>
 </head>
 <body>
+    <!-- 错误显示面板 -->
+    <div id="errorPanel" class="error-panel">
+        <div class="error-content">
+            <h3>🚨 错误信息</h3>
+            <div id="errorMessage"></div>
+        </div>
+        <button class="close-error" onclick="document.getElementById('errorPanel').classList.remove('show')">关闭</button>
+    </div>
+
     <!-- 密码认证页面 -->
     <div id="authContainer" class="auth-container">
         <div class="auth-box">
@@ -103,12 +149,17 @@
 
                 <!-- GitHub认证状态 -->
                 <div class="auth-section">
-                    <div class="auth-status" id="authStatus">
+                    <div class="auth-status not-authenticated" id="authStatus">
                         <i class="fas fa-times-circle"></i> 未认证
                     </div>
-                    <button class="auth-btn" onclick="manageGitHubToken()">
-                        <i class="fas fa-key"></i> 管理 GitHub Token
-                    </button>
+                    <div class="auth-buttons">
+                        <button class="auth-btn" onclick="manageGitHubToken()">
+                            <i class="fas fa-key"></i> 管理 GitHub Token
+                        </button>
+                        <button class="auth-btn secondary" onclick="testUpload()" style="background: var(--accent-color);">
+                            <i class="fas fa-vial"></i> 测试上传
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -141,6 +192,5 @@
     <!-- 加载脚本 -->
     <script src="auth.js"></script>
     <script src="script.js"></script>
-    <script src="github-uploader.js"></script>
 </body>
 </html>
