@@ -1,6 +1,6 @@
-// 配置文件
+// 配置文件 - 已修复仓库名
 const CONFIG = {
-    repo: 'Chinesexiaochen/mycloudrive.github.io',
+    repo: 'Chinesexiaochen/Chinesexiaochen.github.io',  // ✅ 正确的仓库名
     username: 'Chinesexiaochen'
 };
 
@@ -20,7 +20,7 @@ let cloudDrive;
 
 // 错误显示函数
 function showError(message) {
-    alert('❌ ' + message); // 先用简单的alert
+    alert('❌ ' + message);
     console.error('错误:', message);
 }
 
@@ -29,9 +29,9 @@ function showMessage(message, type = 'info') {
     alert((type === 'success' ? '✅ ' : 'ℹ️ ') + message);
 }
 
-// 简化的上传函数
+// 上传函数
 async function uploadFileToGitHub(file, token) {
-    console.log('开始上传文件:', file.name, '大小:', file.size, '类型:', file.type);
+    console.log('开始上传文件:', file.name);
     
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -39,17 +39,11 @@ async function uploadFileToGitHub(file, token) {
         reader.onload = async function() {
             try {
                 const content = reader.result;
-                console.log('文件读取完成，内容长度:', content.length);
-                
                 const contentB64 = content.split(',')[1];
-                console.log('Base64内容长度:', contentB64.length);
                 
                 console.log('开始API调用...');
                 
-                const CONFIG = {
-    repo: 'Chinesexiaochen/Chinesexiaochen.github.io',  // ✅ 正确的
-    username: 'Chinesexiaochen'
-}; {
+                const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${encodeURIComponent(file.name)}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `token ${token}`,
@@ -63,7 +57,6 @@ async function uploadFileToGitHub(file, token) {
                 
                 console.log('API响应状态:', response.status);
                 const result = await response.json();
-                console.log('API响应结果:', result);
                 
                 if (response.ok) {
                     console.log('✅ 上传成功！');
@@ -72,15 +65,10 @@ async function uploadFileToGitHub(file, token) {
                     console.error('❌ 上传失败:', result);
                     let errorMsg = result.message || `上传失败: ${response.status}`;
                     
-                    if (response.status === 401) {
-                        errorMsg = 'Token无效或已过期，请重新设置';
-                    } else if (response.status === 403) {
-                        errorMsg = '权限不足，请检查Token权限';
-                    } else if (response.status === 404) {
-                        errorMsg = '仓库不存在或无权访问';
-                    } else if (response.status === 422) {
-                        errorMsg = '文件已存在或路径无效';
-                    }
+                    if (response.status === 401) errorMsg = 'Token无效';
+                    else if (response.status === 403) errorMsg = '权限不足';
+                    else if (response.status === 404) errorMsg = '仓库不存在';
+                    else if (response.status === 422) errorMsg = '文件已存在';
                     
                     reject(new Error(errorMsg));
                 }
@@ -91,19 +79,17 @@ async function uploadFileToGitHub(file, token) {
         };
         
         reader.onerror = function() {
-            console.error('文件读取错误');
             reject(new Error('文件读取失败'));
         };
         
-        console.log('开始读取文件...');
         reader.readAsDataURL(file);
     });
 }
 
-// GitHub API 删除文件
+// 删除函数
 async function deleteFileFromGitHub(filename, sha, token) {
     try {
-        const response = await fetch(`https://api.github.com/repos/Chinesexiaochen/mycloudrive.github.io/contents/${encodeURIComponent(filename)}`, {
+        const response = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${encodeURIComponent(filename)}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `token ${token}`,
@@ -122,7 +108,7 @@ async function deleteFileFromGitHub(filename, sha, token) {
     }
 }
 
-// 文件验证函数
+// 文件验证
 function validateFile(file) {
     if (file.size > 25 * 1024 * 1024) {
         throw new Error('文件大小不能超过25MB');
@@ -207,7 +193,7 @@ class CloudDrive {
                     size: this.formatFileSize(item.size || 0),
                     type: this.getFileType(item.path),
                     icon: this.getFileIcon(item.path),
-                    url: `https://${CONFIG.username}.github.io/mycloudrive.github.io/${item.path}`,
+                    url: `https://${CONFIG.username}.github.io/${item.path}`,
                     rawUrl: `https://raw.githubusercontent.com/${CONFIG.repo}/main/${item.path}`,
                     sha: item.sha
                 }));
@@ -336,12 +322,6 @@ class CloudDrive {
             progressFill.style.width = '0%';
             progressText.textContent = '准备上传... 0%';
 
-            progressFill.style.width = '30%';
-            progressText.textContent = '验证文件中... 30%';
-
-            progressFill.style.width = '60%';
-            progressText.textContent = '上传中... 60%';
-
             const success = await uploadFileToGitHub(file, token);
             
             if (success) {
@@ -388,7 +368,13 @@ class CloudDrive {
     }
 }
 
-// 搜索功能
+// 其他函数保持不变...
+window.filterFiles = filterFiles;
+window.selectFile = selectFile;
+window.manageGitHubToken = manageGitHubToken;
+window.initCloudDrive = initCloudDrive;
+window.testUpload = testUpload;
+
 function filterFiles() {
     if (!cloudDrive) return;
     const searchTerm = document.getElementById('search').value.toLowerCase();
@@ -396,12 +382,10 @@ function filterFiles() {
     cloudDrive.renderFileList(filteredFiles);
 }
 
-// 选择文件
 function selectFile() {
     document.getElementById('fileInput').click();
 }
 
-// 管理GitHub Token
 function manageGitHubToken() {
     const token = localStorage.getItem('github_token');
     
@@ -425,7 +409,6 @@ function manageGitHubToken() {
     }
 }
 
-// 测试上传功能
 function testUpload() {
     const token = localStorage.getItem('github_token');
     if (!token) {
@@ -436,7 +419,7 @@ function testUpload() {
     const testContent = '测试文件 ' + new Date().toLocaleString();
     const contentB64 = btoa(unescape(encodeURIComponent(testContent)));
     
-    fetch(`https://api.github.com/repos/Chinesexiaochen/mycloudrive.github.io/contents/test-${Date.now()}.txt`, {
+    fetch(`https://api.github.com/repos/Chinesexiaochen/Chinesexiaochen.github.io/contents/test-${Date.now()}.txt`, {
         method: 'PUT',
         headers: {
             'Authorization': `token ${token}`,
@@ -461,16 +444,8 @@ function testUpload() {
     });
 }
 
-// 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('mainContainer') && !document.getElementById('mainContainer').classList.contains('hidden')) {
         initCloudDrive();
     }
 });
-
-// 全局导出函数
-window.filterFiles = filterFiles;
-window.selectFile = selectFile;
-window.manageGitHubToken = manageGitHubToken;
-window.initCloudDrive = initCloudDrive;
-window.testUpload = testUpload;
