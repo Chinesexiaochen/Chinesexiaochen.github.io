@@ -3,507 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的世界 - 网页版</title>
+    <title>银剑 - 博客</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', monospace;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background: linear-gradient(to bottom, #87CEEB, #1E90FF);
-            color: #fff;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e6e6e6;
             min-height: 100vh;
-            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            width: 100%;
+            max-width: 480px;
+            background-color: rgba(22, 33, 62, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
         }
         
-        header {
+        /* 标题样式 */
+        .header {
+            padding: 40px 30px 20px;
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 4px solid #8B4513;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to right, #4a6fa5, #5d8fc9);
+            position: relative;
+            overflow: hidden;
         }
         
-        h1 {
-            font-size: 3rem;
-            text-shadow: 3px 3px 0 #000;
-            margin-bottom: 10px;
-            color: #4CAF50;
+        .title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 8px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(77, 143, 255, 0.7);
+            position: relative;
+            z-index: 2;
+            animation: glow 2s ease-in-out infinite alternate;
         }
         
-        .subtitle {
+        .title-sub {
             font-size: 1.2rem;
-            color: #FFD700;
-            margin-bottom: 20px;
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 300;
+            letter-spacing: 3px;
         }
         
-        .game-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+        /* 表单容器 */
+        .form-container {
+            padding: 40px 40px 50px;
+            transition: transform 0.5s ease;
+        }
+        
+        .form {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        .form-title {
+            font-size: 1.8rem;
             margin-bottom: 30px;
-        }
-        
-        .game-area {
-            flex: 1;
-            min-width: 300px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 4px solid #8B4513;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-        }
-        
-        .game-title {
             text-align: center;
-            margin-bottom: 15px;
-            color: #FFD700;
-            font-size: 1.5rem;
+            color: #5d8fc9;
+            font-weight: 600;
         }
         
-        .world {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            grid-gap: 5px;
-            margin: 0 auto;
-            max-width: 500px;
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
         }
         
-        .block {
-            width: 40px;
-            height: 40px;
-            border: 2px solid rgba(0, 0, 0, 0.5);
-            border-radius: 3px;
-            cursor: pointer;
-            transition: transform 0.1s;
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #b8c6db;
+            font-size: 1rem;
         }
         
-        .block:hover {
-            transform: scale(1.1);
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #2d4263;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
         
-        .block:active {
-            transform: scale(0.95);
+        .input-group input:focus {
+            outline: none;
+            border-color: #5d8fc9;
+            box-shadow: 0 0 0 2px rgba(93, 143, 201, 0.3);
+            background-color: rgba(255, 255, 255, 0.12);
         }
         
-        .grass {
-            background-color: #4CAF50;
-        }
-        
-        .dirt {
-            background-color: #8B4513;
-        }
-        
-        .stone {
-            background-color: #808080;
-        }
-        
-        .water {
-            background-color: #1E90FF;
-        }
-        
-        .wood {
-            background-color: #A0522D;
-        }
-        
-        .leaves {
-            background-color: #228B22;
-        }
-        
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 43px;
+            color: #5d8fc9;
+            font-size: 1.2rem;
         }
         
         .btn {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
+            display: block;
+            width: 100%;
+            padding: 16px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        
-        .btn:hover {
-            background-color: #45a049;
-        }
-        
-        .inventory {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .inventory-item {
-            width: 50px;
-            height: 50px;
-            border: 2px solid #FFD700;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .inventory-item:hover {
-            transform: scale(1.1);
-        }
-        
-        .selected {
-            border: 3px solid #FF4500;
-            box-shadow: 0 0 10px #FF4500;
-        }
-        
-        .character {
-            width: 60px;
-            height: 80px;
-            background-color: #8B4513;
-            margin: 0 auto 20px;
-            position: relative;
-            border-radius: 5px;
-        }
-        
-        .character-head {
-            width: 50px;
-            height: 50px;
-            background-color: #FFD700;
-            border-radius: 5px;
-            position: absolute;
-            top: -40px;
-            left: 5px;
-        }
-        
-        .character-body {
-            width: 40px;
-            height: 40px;
-            background-color: #4CAF50;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            border-radius: 3px;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-        
-        .stat {
+            transition: all 0.3s ease;
             text-align: center;
         }
         
-        .stat-value {
-            font-size: 1.5rem;
-            color: #FFD700;
+        .btn-primary {
+            background: linear-gradient(to right, #4a6fa5, #5d8fc9);
+            color: white;
+            margin-top: 10px;
         }
         
-        .crafting {
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3d5d8c, #4a78b5);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(77, 143, 255, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #b8c6db;
+            border: 2px solid #2d4263;
             margin-top: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border-radius: 5px;
         }
         
-        .crafting-title {
-            text-align: center;
-            margin-bottom: 10px;
-            color: #FFD700;
+        .btn-secondary:hover {
+            background: rgba(45, 66, 99, 0.3);
+            border-color: #5d8fc9;
+            color: #fff;
         }
         
-        .crafting-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 5px;
-            max-width: 150px;
-            margin: 0 auto;
-        }
-        
-        .crafting-slot {
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid #FFD700;
-            border-radius: 3px;
-        }
-        
-        .crafting-result {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid #4CAF50;
-            border-radius: 5px;
-            margin: 10px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        footer {
+        .form-footer {
             text-align: center;
             margin-top: 30px;
-            padding: 15px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            color: #FFD700;
+            color: #8a9bb2;
+            font-size: 0.95rem;
         }
         
-        @media (max-width: 768px) {
-            .game-container {
-                flex-direction: column;
+        .form-footer a {
+            color: #5d8fc9;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .form-footer a:hover {
+            color: #7ba7e0;
+            text-decoration: underline;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 576px) {
+            .container {
+                max-width: 100%;
             }
             
-            .block {
-                width: 30px;
-                height: 30px;
+            .header {
+                padding: 30px 20px 15px;
             }
             
-            h1 {
-                font-size: 2rem;
+            .title {
+                font-size: 2.8rem;
+                letter-spacing: 5px;
+            }
+            
+            .form-container {
+                padding: 30px 25px 40px;
             }
         }
         
         /* 动画效果 */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(77, 143, 255, 0.7), 0 0 20px rgba(77, 143, 255, 0.5);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(77, 143, 255, 0.9), 0 0 25px rgba(77, 143, 255, 0.7), 0 0 35px rgba(77, 143, 255, 0.5);
+            }
         }
         
-        .floating {
-            animation: float 3s ease-in-out infinite;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        /* 云朵 */
-        .cloud {
+        /* 装饰性元素 */
+        .sword-icon {
             position: absolute;
-            background-color: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            z-index: -1;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.1);
+            z-index: 1;
         }
         
-        .cloud1 {
-            width: 100px;
-            height: 40px;
-            top: 10%;
-            left: 5%;
+        .sword-icon:nth-child(1) {
+            top: 20px;
+            left: 20px;
+            transform: rotate(45deg);
         }
         
-        .cloud2 {
-            width: 150px;
-            height: 60px;
-            top: 20%;
-            right: 10%;
+        .sword-icon:nth-child(2) {
+            bottom: 20px;
+            right: 20px;
+            transform: rotate(-45deg);
         }
         
-        .cloud3 {
-            width: 120px;
-            height: 50px;
-            bottom: 20%;
-            left: 15%;
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .message.success {
+            background-color: rgba(46, 125, 50, 0.2);
+            color: #81c784;
+            border: 1px solid rgba(46, 125, 50, 0.3);
+        }
+        
+        .message.error {
+            background-color: rgba(198, 40, 40, 0.2);
+            color: #e57373;
+            border: 1px solid rgba(198, 40, 40, 0.3);
         }
     </style>
 </head>
 <body>
-    <div class="cloud cloud1"></div>
-    <div class="cloud cloud2"></div>
-    <div class="cloud cloud3"></div>
-    
     <div class="container">
-        <header>
-            <h1>我的世界 - 网页版</h1>
-            <p class="subtitle">探索、建造、生存！</p>
-        </header>
+        <!-- 装饰性剑图标 -->
+        <div class="sword-icon"><i class="fas fa-crosshairs"></i></div>
+        <div class="sword-icon"><i class="fas fa-crosshairs"></i></div>
         
-        <div class="game-container">
-            <div class="game-area">
-                <h2 class="game-title">方块世界</h2>
-                <div class="world" id="world">
-                    <!-- 方块将通过JavaScript生成 -->
-                </div>
-                
-                <div class="controls">
-                    <button class="btn" id="mine-btn">挖掘方块</button>
-                    <button class="btn" id="place-btn">放置方块</button>
-                    <button class="btn" id="reset-btn">重置世界</button>
-                </div>
-                
-                <div class="inventory" id="inventory">
-                    <div class="inventory-item grass selected" data-type="grass"></div>
-                    <div class="inventory-item dirt" data-type="dirt"></div>
-                    <div class="inventory-item stone" data-type="stone"></div>
-                    <div class="inventory-item wood" data-type="wood"></div>
-                    <div class="inventory-item leaves" data-type="leaves"></div>
-                </div>
-            </div>
-            
-            <div class="game-area">
-                <h2 class="game-title">玩家状态</h2>
-                <div class="character floating">
-                    <div class="character-head"></div>
-                    <div class="character-body"></div>
-                </div>
-                
-                <div class="stats">
-                    <div class="stat">
-                        <div class="stat-label">生命值</div>
-                        <div class="stat-value" id="health">20</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">饥饿值</div>
-                        <div class="stat-value" id="hunger">20</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-label">经验值</div>
-                        <div class="stat-value" id="xp">0</div>
-                    </div>
-                </div>
-                
-                <div class="crafting">
-                    <h3 class="crafting-title">合成台</h3>
-                    <div class="crafting-grid">
-                        <div class="crafting-slot"></div>
-                        <div class="crafting-slot"></div>
-                        <div class="crafting-slot"></div>
-                        <div class="crafting-slot"></div>
-                        <div class="crafting-slot"></div>
-                        <div class="crafting-slot"></div>
-                        <div class="crafting-slot"></div>
-                        <div class="crafting-slot"></div>
-                        <div class="crafting-slot"></div>
-                    </div>
-                    <div class="crafting-result">
-                        <div class="inventory-item wood"></div>
-                    </div>
-                    <div style="text-align: center;">
-                        <button class="btn">合成</button>
-                    </div>
-                </div>
-            </div>
+        <!-- 标题部分 -->
+        <div class="header">
+            <h1 class="title">银剑</h1>
+            <p class="title-sub">锋利的思考，优雅的表达</p>
         </div>
         
-        <footer>
-            <p>我的世界网页版 - 使用HTML、CSS和JavaScript创建</p>
-            <p>注意：这是一个简化版演示，并非官方Minecraft游戏</p>
-        </footer>
+        <!-- 消息提示 -->
+        <div id="message" class="message"></div>
+        
+        <!-- 表单容器 -->
+        <div class="form-container">
+            <!-- 登录表单 -->
+            <form id="loginForm" class="form active">
+                <h2 class="form-title">登录到银剑博客</h2>
+                
+                <div class="input-group">
+                    <label for="loginUsername">账户名</label>
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="loginUsername" placeholder="请输入账户名" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="loginPassword">密码</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="请输入密码" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">登录</button>
+                <button type="button" class="btn btn-secondary" id="switchToRegister">没有账户？立即注册</button>
+                
+                <div class="form-footer">
+                    继续使用即表示您同意我们的 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>
+                </div>
+            </form>
+            
+            <!-- 注册表单 -->
+            <form id="registerForm" class="form">
+                <h2 class="form-title">注册银剑账户</h2>
+                
+                <div class="input-group">
+                    <label for="registerUsername">账户名</label>
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="registerUsername" placeholder="请输入账户名（3-16个字符）" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="registerPassword">密码</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="registerPassword" placeholder="请输入密码（至少6个字符）" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="confirmPassword">确认密码</label>
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="confirmPassword" placeholder="请再次输入密码" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">注册</button>
+                <button type="button" class="btn btn-secondary" id="switchToLogin">已有账户？返回登录</button>
+                
+                <div class="form-footer">
+                    注册即表示您同意我们的 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
-        // 生成方块世界
-        const world = document.getElementById('world');
-        const blockTypes = ['grass', 'dirt', 'stone', 'water', 'wood', 'leaves'];
+        // DOM元素
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const switchToRegister = document.getElementById('switchToRegister');
+        const switchToLogin = document.getElementById('switchToLogin');
+        const messageDiv = document.getElementById('message');
         
-        // 创建10x10的方块世界
-        for (let i = 0; i < 100; i++) {
-            const block = document.createElement('div');
-            // 随机分配方块类型，但确保第一行是草方块
-            if (i < 10) {
-                block.className = 'block grass';
-            } else if (i < 30) {
-                block.className = 'block dirt';
-            } else if (i < 60) {
-                block.className = 'block stone';
-            } else if (i < 70) {
-                block.className = 'block water';
-            } else if (i < 85) {
-                block.className = 'block wood';
-            } else {
-                block.className = 'block leaves';
-            }
+        // 切换到注册表单
+        switchToRegister.addEventListener('click', () => {
+            loginForm.classList.remove('active');
+            registerForm.classList.add('active');
+            clearMessage();
+        });
+        
+        // 切换到登录表单
+        switchToLogin.addEventListener('click', () => {
+            registerForm.classList.remove('active');
+            loginForm.classList.add('active');
+            clearMessage();
+        });
+        
+        // 显示消息
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
             
-            block.setAttribute('data-type', block.className.split(' ')[1]);
-            world.appendChild(block);
+            // 3秒后自动隐藏消息
+            setTimeout(clearMessage, 3000);
         }
         
-        // 库存选择
-        const inventoryItems = document.querySelectorAll('.inventory-item');
-        let selectedBlockType = 'grass';
+        // 清除消息
+        function clearMessage() {
+            messageDiv.style.display = 'none';
+            messageDiv.textContent = '';
+        }
         
-        inventoryItems.forEach(item => {
-            item.addEventListener('click', function() {
-                inventoryItems.forEach(i => i.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedBlockType = this.getAttribute('data-type');
-            });
-        });
-        
-        // 挖掘方块功能
-        document.getElementById('mine-btn').addEventListener('click', function() {
-            alert('挖掘了 ' + selectedBlockType + ' 方块！');
-            // 在实际游戏中，这里会移除方块并添加到玩家库存
-        });
-        
-        // 放置方块功能
-        document.getElementById('place-btn').addEventListener('click', function() {
-            alert('放置了 ' + selectedBlockType + ' 方块！');
-            // 在实际游戏中，这里会从玩家库存移除方块并在世界中放置
-        });
-        
-        // 重置世界
-        document.getElementById('reset-btn').addEventListener('click', function() {
-            if (confirm('确定要重置世界吗？')) {
-                location.reload();
+        // 处理登录表单提交
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            
+            // 简单验证
+            if (!username || !password) {
+                showMessage('请输入账户名和密码', 'error');
+                return;
             }
-        });
-        
-        // 方块点击交互
-        const blocks = document.querySelectorAll('.block');
-        blocks.forEach(block => {
-            block.addEventListener('click', function() {
-                const type = this.getAttribute('data-type');
-                alert('点击了 ' + type + ' 方块！');
+            
+            // 模拟登录请求
+            showMessage('登录中，请稍候...', 'success');
+            
+            // 模拟API请求延迟
+            setTimeout(() => {
+                // 这里应该发送到服务器进行验证
+                // 模拟成功登录
+                showMessage(`欢迎回来，${username}！正在跳转到博客首页...`, 'success');
                 
-                // 添加点击效果
-                this.style.transform = 'scale(0.9)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 200);
-            });
+                // 在实际应用中，这里会跳转到博客首页
+                // window.location.href = 'dashboard.html';
+            }, 1000);
         });
         
-        // 简单的状态变化（演示用）
-        setInterval(() => {
-            const health = document.getElementById('health');
-            const hunger = document.getElementById('hunger');
-            const xp = document.getElementById('xp');
+        // 处理注册表单提交
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
             
-            // 随机变化状态值（在实际游戏中这些值会根据玩家行动变化）
-            let healthVal = parseInt(health.textContent);
-            let hungerVal = parseInt(hunger.textContent);
-            let xpVal = parseInt(xp.textContent);
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
             
-            // 随机小幅度变化
-            healthVal = Math.max(1, healthVal + Math.floor(Math.random() * 3) - 1);
-            hungerVal = Math.max(0, hungerVal + Math.floor(Math.random() * 3) - 1);
-            xpVal += Math.floor(Math.random() * 2);
+            // 验证用户名
+            if (username.length < 3 || username.length > 16) {
+                showMessage('账户名长度应为3-16个字符', 'error');
+                return;
+            }
             
-            health.textContent = healthVal;
-            hunger.textContent = hungerVal;
-            xp.textContent = xpVal;
-        }, 3000);
+            // 验证密码
+            if (password.length < 6) {
+                showMessage('密码长度至少为6个字符', 'error');
+                return;
+            }
+            
+            // 验证密码匹配
+            if (password !== confirmPassword) {
+                showMessage('两次输入的密码不一致', 'error');
+                return;
+            }
+            
+            // 模拟注册请求
+            showMessage('正在注册，请稍候...', 'success');
+            
+            // 模拟API请求延迟
+            setTimeout(() => {
+                // 这里应该发送到服务器进行注册
+                // 模拟成功注册
+                showMessage(`账户 ${username} 注册成功！请登录。`, 'success');
+                
+                // 清空表单
+                document.getElementById('registerUsername').value = '';
+                document.getElementById('registerPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                
+                // 切换到登录表单
+                setTimeout(() => {
+                    registerForm.classList.remove('active');
+                    loginForm.classList.add('active');
+                    
+                    // 预填充用户名
+                    document.getElementById('loginUsername').value = username;
+                    document.getElementById('loginPassword').focus();
+                }, 1500);
+            }, 1000);
+        });
+        
+        // 页面加载时显示欢迎信息
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                showMessage('欢迎来到银剑博客，请登录或注册新账户', 'success');
+            }, 500);
+        });
     </script>
 </body>
 </html>
