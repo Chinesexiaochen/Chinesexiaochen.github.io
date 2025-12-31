@@ -3,478 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>曾2026跨年快乐！</title>
+    <title>实时聊天室</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background: linear-gradient(135deg, #0c0e2e 0%, #1a1b3a 50%, #2d1b3a 100%);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        .container {
-            max-width: 1200px;
-            width: 90%;
-            text-align: center;
-            padding: 30px;
-            z-index: 10;
-            position: relative;
-        }
-        
-        header {
-            margin-bottom: 40px;
-        }
-        
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            letter-spacing: 1.5px;
-        }
-        
-        h2 {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
-            color: #ffd93d;
-            font-weight: 700;
-        }
-        
-        .year-display {
-            font-size: 9rem;
-            font-weight: bold;
-            color: #ff6b6b;
-            text-shadow: 0 0 30px rgba(255, 107, 107, 0.7);
-            margin: 30px 0;
-            letter-spacing: 5px;
-            font-family: 'Dancing Script', cursive;
-            animation: pulse 2s infinite alternate;
-        }
-        
-        .celebration-text {
-            font-size: 1.8rem;
-            margin: 30px 0;
-            color: #6bcf7f;
-            line-height: 1.6;
-        }
-        
-        .message-section {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 40px 0;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .message-section h3 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #4d96ff;
-        }
-        
-        .message-section p {
-            font-size: 1.3rem;
-            line-height: 1.8;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        
-        .fireworks-btn {
-            background: linear-gradient(90deg, #ff6b6b, #ff8e53);
-            color: white;
-            border: none;
-            padding: 18px 40px;
-            font-size: 1.4rem;
-            border-radius: 50px;
-            cursor: pointer;
-            margin: 30px 0;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-        }
-        
-        .fireworks-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.6);
-        }
-        
-        .fireworks-btn:active {
-            transform: translateY(0);
-        }
-        
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .feature {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            padding: 25px;
-            width: 280px;
-            transition: transform 0.3s ease;
-        }
-        
-        .feature:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.12);
-        }
-        
-        .feature i {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: #ffd93d;
-        }
-        
-        .feature h4 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #4d96ff;
-        }
-        
-        .feature p {
-            font-size: 1.1rem;
-            line-height: 1.5;
-        }
-        
-        footer {
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        /* 烟花效果 */
-        .firework {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .confetti {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        /* 动画 */
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                text-shadow: 0 0 30px rgba(255, 107, 107, 0.7);
-            }
-            100% {
-                transform: scale(1.05);
-                text-shadow: 0 0 50px rgba(255, 107, 107, 1);
-            }
-        }
-        
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-20px) rotate(10deg);
-            }
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-            
-            h2 {
-                font-size: 1.8rem;
-            }
-            
-            .year-display {
-                font-size: 6rem;
-            }
-            
-            .celebration-text {
-                font-size: 1.5rem;
-            }
-            
-            .features {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .feature {
-                width: 90%;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-glass-cheers"></i> 跨年庆祝 2026 <i class="fas fa-glass-cheers"></i></h1>
-            <h2>迎接崭新的一年</h2>
-        </header>
-        
-        <div class="year-display">2026</div>
-        
-        <div class="celebration-text">
-            <p>告别2025，迎接2026！</p>
-            <p>愿新的一年充满喜悦、成功与健康！</p>
-        </div>
-        
-        <button class="fireworks-btn" id="fireworksBtn">
-            <i class="fas fa-fire"></i> 触发烟花效果 <i class="fas fa-fire"></i>
-        </button>
-        
-        <div class="message-section">
-            <h3><i class="fas fa-star"></i> 新年祝福 <i class="fas fa-star"></i></h3>
-            <p>亲爱的朋友，2026年已经到来！这是一个全新的开始，充满了无限的可能和机遇。</p>
-            <p>愿你在新的一年里：</p>
-            <p>• 实现心中的梦想和目标</p>
-            <p>• 拥有健康与快乐</p>
-            <p>• 事业蒸蒸日上</p>
-            <p>• 家庭幸福美满</p>
-            <p>• 探索新的可能，创造精彩人生</p>
-            <p>让我们一起庆祝这个特别的时刻，迎接充满希望的2026年！</p>
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <i class="fas fa-heart"></i>
-                <h4>爱与关怀</h4>
-                <p>愿新的一年充满爱与温暖，与家人朋友共享美好时光。</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-bullseye"></i>
-                <h4>目标达成</h4>
-                <p>设定新的目标，保持动力，2026年将成为你的突破之年。</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-globe-americas"></i>
-                <h4>新的冒险</h4>
-                <p>探索新地方，学习新技能，体验新文化，让生活更加丰富多彩。</p>
+        <!-- 注册/登录界面 -->
+        <div id="auth-container" class="auth-container">
+            <div class="auth-box">
+                <h1><i class="fas fa-comments"></i> 实时聊天室</h1>
+                <p class="subtitle">一个IP只能注册一个账号 · 支持撤回、引用和删除消息</p>
+                
+                <div id="login-form">
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" placeholder="请输入用户名" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" placeholder="请输入密码">
+                    </div>
+                    <button id="login-btn" class="btn btn-primary">登录</button>
+                    <p class="auth-switch">还没有账号？<a href="#" id="switch-to-register">点击注册</a></p>
+                </div>
+                
+                <div id="register-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="reg-username">用户名</label>
+                        <input type="text" id="reg-username" placeholder="请输入用户名" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">密码</label>
+                        <input type="password" id="reg-password" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">确认密码</label>
+                        <input type="password" id="confirm-password" placeholder="请再次输入密码">
+                    </div>
+                    <button id="register-btn" class="btn btn-primary">注册</button>
+                    <p class="auth-switch">已有账号？<a href="#" id="switch-to-login">点击登录</a></p>
+                </div>
+                
+                <div class="auth-notice">
+                    <p><i class="fas fa-info-circle"></i> 注意：系统将记录您的IP地址，每个IP只能注册一个账号。</p>
+                </div>
             </div>
         </div>
-        
-        <footer>
-            <p>© 2026 跨年庆祝页面 | 设计用于庆祝2026年新年 | 祝您新年快乐！</p>
-            <p>使用HTML、CSS和JavaScript创建</p>
-        </footer>
+
+        <!-- 聊天主界面 -->
+        <div id="chat-container" class="chat-container" style="display: none;">
+            <header class="chat-header">
+                <div class="header-left">
+                    <h2><i class="fas fa-comments"></i> 聊天室</h2>
+                    <div class="user-info">
+                        <span id="current-user"></span>
+                        <span class="online-count" id="online-count">0人在线</span>
+                    </div>
+                </div>
+                <button id="logout-btn" class="btn btn-secondary">退出</button>
+            </header>
+
+            <div class="chat-main">
+                <!-- 在线用户列表 -->
+                <div class="users-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-users"></i> 在线用户 (<span id="users-count">0</span>)</h3>
+                    </div>
+                    <ul id="users-list" class="users-list">
+                        <!-- 在线用户列表会动态生成 -->
+                    </ul>
+                </div>
+
+                <!-- 聊天区域 -->
+                <div class="chat-area">
+                    <div class="messages-container">
+                        <div id="messages" class="messages">
+                            <!-- 消息会动态添加到这里 -->
+                        </div>
+                    </div>
+
+                    <!-- 引用消息预览 -->
+                    <div id="quote-preview" class="quote-preview" style="display: none;">
+                        <div class="quote-content">
+                            <span id="quote-text"></span>
+                            <button id="cancel-quote" class="cancel-quote"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- 消息输入区域 -->
+                    <div class="message-input-container">
+                        <div class="input-actions">
+                            <button id="clear-input" class="btn-icon" title="清空输入"><i class="fas fa-eraser"></i></button>
+                            <button id="toggle-emoji" class="btn-icon" title="表情"><i class="far fa-smile"></i></button>
+                        </div>
+                        <textarea id="message-input" placeholder="输入消息... (按Ctrl+Enter发送)" rows="2"></textarea>
+                        <button id="send-btn" class="btn btn-primary">发送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 表情选择器 -->
+        <div id="emoji-picker" class="emoji-picker" style="display: none;">
+            <div class="emoji-header">
+                <h4>选择表情</h4>
+                <button id="close-emoji" class="btn-icon"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="emoji-list">
+                <!-- 常用表情 -->
+                <span class="emoji">😀</span>
+                <span class="emoji">😁</span>
+                <span class="emoji">😂</span>
+                <span class="emoji">😊</span>
+                <span class="emoji">😉</span>
+                <span class="emoji">😍</span>
+                <span class="emoji">😎</span>
+                <span class="emoji">😜</span>
+                <span class="emoji">👍</span>
+                <span class="emoji">👏</span>
+                <span class="emoji">🎉</span>
+                <span class="emoji">❤️</span>
+                <span class="emoji">🔥</span>
+                <span class="emoji">💯</span>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // 创建烟花效果
-        function createFirework(x, y) {
-            const colors = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#4d96ff', '#9d4edd'];
-            
-            for (let i = 0; i < 80; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('firework');
-                
-                // 随机颜色
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.backgroundColor = color;
-                
-                // 随机位置
-                const angle = Math.random() * Math.PI * 2;
-                const velocity = 2 + Math.random() * 3;
-                const vx = Math.cos(angle) * velocity;
-                const vy = Math.sin(angle) * velocity;
-                
-                // 设置初始位置
-                particle.style.left = x + 'px';
-                particle.style.top = y + 'px';
-                
-                document.body.appendChild(particle);
-                
-                // 粒子动画
-                let posX = x;
-                let posY = y;
-                let opacity = 1;
-                
-                const animateParticle = () => {
-                    posX += vx;
-                    posY += vy;
-                    opacity -= 0.02;
-                    
-                    particle.style.left = posX + 'px';
-                    particle.style.top = posY + 'px';
-                    particle.style.opacity = opacity;
-                    
-                    if (opacity > 0) {
-                        requestAnimationFrame(animateParticle);
-                    } else {
-                        particle.remove();
-                    }
-                };
-                
-                requestAnimationFrame(animateParticle);
-            }
-        }
-        
-        // 创建五彩纸屑效果
-        function createConfetti() {
-            const colors = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#4d96ff', '#9d4edd'];
-            
-            for (let i = 0; i < 150; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                
-                // 随机颜色和形状
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.backgroundColor = color;
-                
-                // 随机大小
-                const size = 5 + Math.random() * 15;
-                confetti.style.width = size + 'px';
-                confetti.style.height = size + 'px';
-                
-                // 随机位置（从顶部开始）
-                const startX = Math.random() * window.innerWidth;
-                confetti.style.left = startX + 'px';
-                confetti.style.top = '-20px';
-                
-                // 随机形状
-                if (Math.random() > 0.5) {
-                    confetti.style.borderRadius = '50%';
-                } else {
-                    confetti.style.borderRadius = '0';
-                }
-                
-                document.body.appendChild(confetti);
-                
-                // 动画参数
-                const duration = 2 + Math.random() * 3;
-                const horizontalVelocity = -2 + Math.random() * 4;
-                const rotationSpeed = -5 + Math.random() * 10;
-                
-                let startTime = null;
-                let opacity = 1;
-                
-                function animateConfetti(timestamp) {
-                    if (!startTime) startTime = timestamp;
-                    const progress = (timestamp - startTime) / 1000;
-                    
-                    // 计算新位置
-                    const newX = startX + horizontalVelocity * progress * 100;
-                    const newY = -20 + progress * progress * 100; // 加速下落
-                    
-                    // 计算旋转
-                    const rotation = rotationSpeed * progress * 50;
-                    
-                    // 计算透明度
-                    opacity = 1 - (progress / duration);
-                    
-                    // 应用变换
-                    confetti.style.left = newX + 'px';
-                    confetti.style.top = newY + 'px';
-                    confetti.style.transform = `rotate(${rotation}deg)`;
-                    confetti.style.opacity = opacity;
-                    
-                    // 继续动画或移除元素
-                    if (progress < duration && newY < window.innerHeight + 50) {
-                        requestAnimationFrame(animateConfetti);
-                    } else {
-                        confetti.remove();
-                    }
-                }
-                
-                requestAnimationFrame(animateConfetti);
-            }
-        }
-        
-        // 自动烟花效果
-        function autoFireworks() {
-            // 随机时间间隔触发烟花
-            setTimeout(() => {
-                const x = Math.random() * window.innerWidth;
-                const y = Math.random() * window.innerHeight;
-                createFirework(x, y);
-                
-                // 偶尔触发五彩纸屑
-                if (Math.random() > 0.7) {
-                    createConfetti();
-                }
-                
-                autoFireworks();
-            }, 500 + Math.random() * 1500);
-        }
-        
-        // 按钮触发烟花
-        document.getElementById('fireworksBtn').addEventListener('click', function() {
-            // 在多个位置创建烟花
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    const x = 100 + Math.random() * (window.innerWidth - 200);
-                    const y = 100 + Math.random() * (window.innerHeight - 200);
-                    createFirework(x, y);
-                    
-                    // 在最后一个烟花时添加五彩纸屑
-                    if (i === 4) {
-                        createConfetti();
-                    }
-                }, i * 300);
-            }
-            
-            // 按钮动画
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
-        });
-        
-        // 点击页面任何地方触发烟花
-        document.addEventListener('click', function(event) {
-            // 避免与按钮冲突
-            if (event.target.id !== 'fireworksBtn') {
-                createFirework(event.clientX, event.clientY);
-            }
-        });
-        
-        // 页面加载后启动自动烟花
-        window.addEventListener('load', function() {
-            // 延迟开始自动烟花
-            setTimeout(autoFireworks, 1000);
-            
-            // 初始烟花效果
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const x = 200 + Math.random() * (window.innerWidth - 400);
-                    const y = 200 + Math.random() * (window.innerHeight - 400);
-                    createFirework(x, y);
-                }, i * 500);
-            }
-        });
-    </script>
+    <!-- 消息操作菜单 -->
+    <div id="message-menu" class="message-menu" style="display: none;">
+        <ul>
+            <li id="quote-menu-item"><i class="fas fa-quote-left"></i> 引用</li>
+            <li id="delete-menu-item"><i class="fas fa-trash"></i> 删除</li>
+            <li id="recall-menu-item"><i class="fas fa-undo"></i> 撤回</li>
+        </ul>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
