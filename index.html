@@ -3,462 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>银剑 - 博客</title>
+    <title>2026跨年快乐！</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #e6e6e6;
+            font-family: 'Noto Sans SC', sans-serif;
+            background: linear-gradient(135deg, #0c0e2e 0%, #1a1b3a 50%, #2d1b3a 100%);
+            color: #fff;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            padding: 20px;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
         }
         
         .container {
-            width: 100%;
-            max-width: 480px;
-            background-color: rgba(22, 33, 62, 0.9);
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            position: relative;
-        }
-        
-        /* 标题样式 */
-        .header {
-            padding: 40px 30px 20px;
+            max-width: 1200px;
+            width: 90%;
             text-align: center;
-            background: linear-gradient(to right, #4a6fa5, #5d8fc9);
+            padding: 30px;
+            z-index: 10;
             position: relative;
-            overflow: hidden;
         }
         
-        .title {
+        header {
+            margin-bottom: 40px;
+        }
+        
+        h1 {
             font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            letter-spacing: 1.5px;
+        }
+        
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #ffd93d;
             font-weight: 700;
-            letter-spacing: 8px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(77, 143, 255, 0.7);
-            position: relative;
-            z-index: 2;
-            animation: glow 2s ease-in-out infinite alternate;
         }
         
-        .title-sub {
-            font-size: 1.2rem;
-            margin-top: 10px;
-            color: rgba(255, 255, 255, 0.85);
-            font-weight: 300;
-            letter-spacing: 3px;
+        .year-display {
+            font-size: 9rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.7);
+            margin: 30px 0;
+            letter-spacing: 5px;
+            font-family: 'Dancing Script', cursive;
+            animation: pulse 2s infinite alternate;
         }
         
-        /* 表单容器 */
-        .form-container {
-            padding: 40px 40px 50px;
-            transition: transform 0.5s ease;
-        }
-        
-        .form {
-            display: none;
-            animation: fadeIn 0.5s ease forwards;
-        }
-        
-        .form.active {
-            display: block;
-        }
-        
-        .form-title {
+        .celebration-text {
             font-size: 1.8rem;
-            margin-bottom: 30px;
-            text-align: center;
-            color: #5d8fc9;
-            font-weight: 600;
+            margin: 30px 0;
+            color: #6bcf7f;
+            line-height: 1.6;
         }
         
-        .input-group {
-            margin-bottom: 25px;
-            position: relative;
+        .message-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #b8c6db;
-            font-size: 1rem;
+        .message-section h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #4d96ff;
         }
         
-        .input-group input {
-            width: 100%;
-            padding: 15px 15px 15px 45px;
-            border: 2px solid #2d4263;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+        .message-section p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: left;
         }
         
-        .input-group input:focus {
-            outline: none;
-            border-color: #5d8fc9;
-            box-shadow: 0 0 0 2px rgba(93, 143, 201, 0.3);
-            background-color: rgba(255, 255, 255, 0.12);
-        }
-        
-        .input-group i {
-            position: absolute;
-            left: 15px;
-            top: 43px;
-            color: #5d8fc9;
-            font-size: 1.2rem;
-        }
-        
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(to right, #4a6fa5, #5d8fc9);
+        .fireworks-btn {
+            background: linear-gradient(90deg, #ff6b6b, #ff8e53);
             color: white;
-            margin-top: 10px;
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(to right, #3d5d8c, #4a78b5);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(77, 143, 255, 0.4);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: #b8c6db;
-            border: 2px solid #2d4263;
-            margin-top: 20px;
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(45, 66, 99, 0.3);
-            border-color: #5d8fc9;
-            color: #fff;
-        }
-        
-        .form-footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #8a9bb2;
-            font-size: 0.95rem;
-        }
-        
-        .form-footer a {
-            color: #5d8fc9;
-            text-decoration: none;
-            font-weight: 600;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.4rem;
+            border-radius: 50px;
             cursor: pointer;
-            transition: color 0.3s ease;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
         }
         
-        .form-footer a:hover {
-            color: #7ba7e0;
-            text-decoration: underline;
+        .fireworks-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.6);
         }
         
-        /* 响应式调整 */
-        @media (max-width: 576px) {
-            .container {
-                max-width: 100%;
-            }
-            
-            .header {
-                padding: 30px 20px 15px;
-            }
-            
-            .title {
-                font-size: 2.8rem;
-                letter-spacing: 5px;
-            }
-            
-            .form-container {
-                padding: 30px 25px 40px;
-            }
+        .fireworks-btn:active {
+            transform: translateY(0);
         }
         
-        /* 动画效果 */
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px rgba(77, 143, 255, 0.7), 0 0 20px rgba(77, 143, 255, 0.5);
-            }
-            to {
-                text-shadow: 0 0 15px rgba(77, 143, 255, 0.9), 0 0 25px rgba(77, 143, 255, 0.7), 0 0 35px rgba(77, 143, 255, 0.5);
-            }
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
         }
         
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .feature {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            width: 280px;
+            transition: transform 0.3s ease;
         }
         
-        /* 装饰性元素 */
-        .sword-icon {
-            position: absolute;
+        .feature:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .feature i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #ffd93d;
+        }
+        
+        .feature h4 {
             font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
+            color: #4d96ff;
+        }
+        
+        .feature p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* 烟花效果 */
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            pointer-events: none;
             z-index: 1;
         }
         
-        .sword-icon:nth-child(1) {
-            top: 20px;
-            left: 20px;
-            transform: rotate(45deg);
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
         }
         
-        .sword-icon:nth-child(2) {
-            bottom: 20px;
-            right: 20px;
-            transform: rotate(-45deg);
+        /* 动画 */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 30px rgba(255, 107, 107, 0.7);
+            }
+            100% {
+                transform: scale(1.05);
+                text-shadow: 0 0 50px rgba(255, 107, 107, 1);
+            }
         }
         
-        .message {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 500;
-            display: none;
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
         }
         
-        .message.success {
-            background-color: rgba(46, 125, 50, 0.2);
-            color: #81c784;
-            border: 1px solid rgba(46, 125, 50, 0.3);
-        }
-        
-        .message.error {
-            background-color: rgba(198, 40, 40, 0.2);
-            color: #e57373;
-            border: 1px solid rgba(198, 40, 40, 0.3);
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .year-display {
+                font-size: 6rem;
+            }
+            
+            .celebration-text {
+                font-size: 1.5rem;
+            }
+            
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .feature {
+                width: 90%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- 装饰性剑图标 -->
-        <div class="sword-icon"><i class="fas fa-crosshairs"></i></div>
-        <div class="sword-icon"><i class="fas fa-crosshairs"></i></div>
+        <header>
+            <h1><i class="fas fa-glass-cheers"></i> 跨年庆祝 2026 <i class="fas fa-glass-cheers"></i></h1>
+            <h2>迎接崭新的一年</h2>
+        </header>
         
-        <!-- 标题部分 -->
-        <div class="header">
-            <h1 class="title">银剑</h1>
-            <p class="title-sub">锋利的思考，优雅的表达</p>
+        <div class="year-display">2026</div>
+        
+        <div class="celebration-text">
+            <p>告别2025，迎接2026！</p>
+            <p>愿新的一年充满喜悦、成功与健康！</p>
         </div>
         
-        <!-- 消息提示 -->
-        <div id="message" class="message"></div>
+        <button class="fireworks-btn" id="fireworksBtn">
+            <i class="fas fa-fire"></i> 触发烟花效果 <i class="fas fa-fire"></i>
+        </button>
         
-        <!-- 表单容器 -->
-        <div class="form-container">
-            <!-- 登录表单 -->
-            <form id="loginForm" class="form active">
-                <h2 class="form-title">登录到银剑博客</h2>
-                
-                <div class="input-group">
-                    <label for="loginUsername">账户名</label>
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="loginUsername" placeholder="请输入账户名" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="loginPassword">密码</label>
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="loginPassword" placeholder="请输入密码" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">登录</button>
-                <button type="button" class="btn btn-secondary" id="switchToRegister">没有账户？立即注册</button>
-                
-                <div class="form-footer">
-                    继续使用即表示您同意我们的 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>
-                </div>
-            </form>
-            
-            <!-- 注册表单 -->
-            <form id="registerForm" class="form">
-                <h2 class="form-title">注册银剑账户</h2>
-                
-                <div class="input-group">
-                    <label for="registerUsername">账户名</label>
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="registerUsername" placeholder="请输入账户名（3-16个字符）" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="registerPassword">密码</label>
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="registerPassword" placeholder="请输入密码（至少6个字符）" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="confirmPassword">确认密码</label>
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="confirmPassword" placeholder="请再次输入密码" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">注册</button>
-                <button type="button" class="btn btn-secondary" id="switchToLogin">已有账户？返回登录</button>
-                
-                <div class="form-footer">
-                    注册即表示您同意我们的 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>
-                </div>
-            </form>
+        <div class="message-section">
+            <h3><i class="fas fa-star"></i> 新年祝福 <i class="fas fa-star"></i></h3>
+            <p>亲爱的朋友，2026年已经到来！这是一个全新的开始，充满了无限的可能和机遇。</p>
+            <p>愿你在新的一年里：</p>
+            <p>• 实现心中的梦想和目标</p>
+            <p>• 拥有健康与快乐</p>
+            <p>• 事业蒸蒸日上</p>
+            <p>• 家庭幸福美满</p>
+            <p>• 探索新的可能，创造精彩人生</p>
+            <p>让我们一起庆祝这个特别的时刻，迎接充满希望的2026年！</p>
         </div>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-heart"></i>
+                <h4>爱与关怀</h4>
+                <p>愿新的一年充满爱与温暖，与家人朋友共享美好时光。</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-bullseye"></i>
+                <h4>目标达成</h4>
+                <p>设定新的目标，保持动力，2026年将成为你的突破之年。</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-globe-americas"></i>
+                <h4>新的冒险</h4>
+                <p>探索新地方，学习新技能，体验新文化，让生活更加丰富多彩。</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2026 跨年庆祝页面 | 设计用于庆祝2026年新年 | 祝您新年快乐！</p>
+            <p>使用HTML、CSS和JavaScript创建</p>
+        </footer>
     </div>
 
     <script>
-        // DOM元素
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const switchToRegister = document.getElementById('switchToRegister');
-        const switchToLogin = document.getElementById('switchToLogin');
-        const messageDiv = document.getElementById('message');
-        
-        // 切换到注册表单
-        switchToRegister.addEventListener('click', () => {
-            loginForm.classList.remove('active');
-            registerForm.classList.add('active');
-            clearMessage();
-        });
-        
-        // 切换到登录表单
-        switchToLogin.addEventListener('click', () => {
-            registerForm.classList.remove('active');
-            loginForm.classList.add('active');
-            clearMessage();
-        });
-        
-        // 显示消息
-        function showMessage(text, type) {
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
+        // 创建烟花效果
+        function createFirework(x, y) {
+            const colors = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#4d96ff', '#9d4edd'];
             
-            // 3秒后自动隐藏消息
-            setTimeout(clearMessage, 3000);
-        }
-        
-        // 清除消息
-        function clearMessage() {
-            messageDiv.style.display = 'none';
-            messageDiv.textContent = '';
-        }
-        
-        // 处理登录表单提交
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-            
-            // 简单验证
-            if (!username || !password) {
-                showMessage('请输入账户名和密码', 'error');
-                return;
-            }
-            
-            // 模拟登录请求
-            showMessage('登录中，请稍候...', 'success');
-            
-            // 模拟API请求延迟
-            setTimeout(() => {
-                // 这里应该发送到服务器进行验证
-                // 模拟成功登录
-                showMessage(`欢迎回来，${username}！正在跳转到博客首页...`, 'success');
+            for (let i = 0; i < 80; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('firework');
                 
-                // 在实际应用中，这里会跳转到博客首页
-                // window.location.href = 'dashboard.html';
-            }, 1000);
-        });
-        
-        // 处理注册表单提交
-        registerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const username = document.getElementById('registerUsername').value.trim();
-            const password = document.getElementById('registerPassword').value.trim();
-            const confirmPassword = document.getElementById('confirmPassword').value.trim();
-            
-            // 验证用户名
-            if (username.length < 3 || username.length > 16) {
-                showMessage('账户名长度应为3-16个字符', 'error');
-                return;
-            }
-            
-            // 验证密码
-            if (password.length < 6) {
-                showMessage('密码长度至少为6个字符', 'error');
-                return;
-            }
-            
-            // 验证密码匹配
-            if (password !== confirmPassword) {
-                showMessage('两次输入的密码不一致', 'error');
-                return;
-            }
-            
-            // 模拟注册请求
-            showMessage('正在注册，请稍候...', 'success');
-            
-            // 模拟API请求延迟
-            setTimeout(() => {
-                // 这里应该发送到服务器进行注册
-                // 模拟成功注册
-                showMessage(`账户 ${username} 注册成功！请登录。`, 'success');
+                // 随机颜色
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.backgroundColor = color;
                 
-                // 清空表单
-                document.getElementById('registerUsername').value = '';
-                document.getElementById('registerPassword').value = '';
-                document.getElementById('confirmPassword').value = '';
+                // 随机位置
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 2 + Math.random() * 3;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
                 
-                // 切换到登录表单
-                setTimeout(() => {
-                    registerForm.classList.remove('active');
-                    loginForm.classList.add('active');
+                // 设置初始位置
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                
+                document.body.appendChild(particle);
+                
+                // 粒子动画
+                let posX = x;
+                let posY = y;
+                let opacity = 1;
+                
+                const animateParticle = () => {
+                    posX += vx;
+                    posY += vy;
+                    opacity -= 0.02;
                     
-                    // 预填充用户名
-                    document.getElementById('loginUsername').value = username;
-                    document.getElementById('loginPassword').focus();
-                }, 1500);
-            }, 1000);
+                    particle.style.left = posX + 'px';
+                    particle.style.top = posY + 'px';
+                    particle.style.opacity = opacity;
+                    
+                    if (opacity > 0) {
+                        requestAnimationFrame(animateParticle);
+                    } else {
+                        particle.remove();
+                    }
+                };
+                
+                requestAnimationFrame(animateParticle);
+            }
+        }
+        
+        // 创建五彩纸屑效果
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#ffd93d', '#6bcf7f', '#4d96ff', '#9d4edd'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // 随机颜色和形状
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.backgroundColor = color;
+                
+                // 随机大小
+                const size = 5 + Math.random() * 15;
+                confetti.style.width = size + 'px';
+                confetti.style.height = size + 'px';
+                
+                // 随机位置（从顶部开始）
+                const startX = Math.random() * window.innerWidth;
+                confetti.style.left = startX + 'px';
+                confetti.style.top = '-20px';
+                
+                // 随机形状
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                } else {
+                    confetti.style.borderRadius = '0';
+                }
+                
+                document.body.appendChild(confetti);
+                
+                // 动画参数
+                const duration = 2 + Math.random() * 3;
+                const horizontalVelocity = -2 + Math.random() * 4;
+                const rotationSpeed = -5 + Math.random() * 10;
+                
+                let startTime = null;
+                let opacity = 1;
+                
+                function animateConfetti(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    const progress = (timestamp - startTime) / 1000;
+                    
+                    // 计算新位置
+                    const newX = startX + horizontalVelocity * progress * 100;
+                    const newY = -20 + progress * progress * 100; // 加速下落
+                    
+                    // 计算旋转
+                    const rotation = rotationSpeed * progress * 50;
+                    
+                    // 计算透明度
+                    opacity = 1 - (progress / duration);
+                    
+                    // 应用变换
+                    confetti.style.left = newX + 'px';
+                    confetti.style.top = newY + 'px';
+                    confetti.style.transform = `rotate(${rotation}deg)`;
+                    confetti.style.opacity = opacity;
+                    
+                    // 继续动画或移除元素
+                    if (progress < duration && newY < window.innerHeight + 50) {
+                        requestAnimationFrame(animateConfetti);
+                    } else {
+                        confetti.remove();
+                    }
+                }
+                
+                requestAnimationFrame(animateConfetti);
+            }
+        }
+        
+        // 自动烟花效果
+        function autoFireworks() {
+            // 随机时间间隔触发烟花
+            setTimeout(() => {
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                createFirework(x, y);
+                
+                // 偶尔触发五彩纸屑
+                if (Math.random() > 0.7) {
+                    createConfetti();
+                }
+                
+                autoFireworks();
+            }, 500 + Math.random() * 1500);
+        }
+        
+        // 按钮触发烟花
+        document.getElementById('fireworksBtn').addEventListener('click', function() {
+            // 在多个位置创建烟花
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = 100 + Math.random() * (window.innerWidth - 200);
+                    const y = 100 + Math.random() * (window.innerHeight - 200);
+                    createFirework(x, y);
+                    
+                    // 在最后一个烟花时添加五彩纸屑
+                    if (i === 4) {
+                        createConfetti();
+                    }
+                }, i * 300);
+            }
+            
+            // 按钮动画
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
         });
         
-        // 页面加载时显示欢迎信息
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                showMessage('欢迎来到银剑博客，请登录或注册新账户', 'success');
-            }, 500);
+        // 点击页面任何地方触发烟花
+        document.addEventListener('click', function(event) {
+            // 避免与按钮冲突
+            if (event.target.id !== 'fireworksBtn') {
+                createFirework(event.clientX, event.clientY);
+            }
+        });
+        
+        // 页面加载后启动自动烟花
+        window.addEventListener('load', function() {
+            // 延迟开始自动烟花
+            setTimeout(autoFireworks, 1000);
+            
+            // 初始烟花效果
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const x = 200 + Math.random() * (window.innerWidth - 400);
+                    const y = 200 + Math.random() * (window.innerHeight - 400);
+                    createFirework(x, y);
+                }, i * 500);
+            }
         });
     </script>
 </body>
