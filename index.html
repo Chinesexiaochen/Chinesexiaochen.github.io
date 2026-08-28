@@ -32,4 +32,111 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.25);
-            z-index: 
+            z-index: 0;
+        }
+
+        /* 按钮容器 —— 只有按钮，没有卡片 */
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .download-btn {
+            padding: 18px 60px;
+            background: linear-gradient(135deg, #ff6a00, #e63900);
+            border: none;
+            border-radius: 60px;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 800;
+            cursor: pointer;
+            letter-spacing: 4px;
+            box-shadow: 0 8px 40px rgba(255, 106, 0, 0.4);
+            transition: 0.25s;
+            text-transform: uppercase;
+        }
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 60px rgba(255, 106, 0, 0.6);
+        }
+        .download-btn:active {
+            transform: scale(0.95);
+        }
+        .download-btn:disabled {
+            background: #444;
+            box-shadow: none;
+            cursor: default;
+            transform: none;
+        }
+
+        .loading-tip {
+            margin-top: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            display: none;
+            letter-spacing: 1px;
+        }
+        .loading-tip.show {
+            display: block;
+        }
+        .loading-tip i {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+            font-style: normal;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 视频全屏 */
+        #rick-video {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 9999;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="download-btn" id="downloadBtn">⬇ 立即下载</button>
+    <div class="loading-tip" id="loadingTip"><i>⟳</i> 正在连接R星服务器...</div>
+</div>
+
+<video id="rick-video" src="rick.mp4" playsinline preload="auto"></video>
+
+<script>
+    const btn = document.getElementById('downloadBtn');
+    const tip = document.getElementById('loadingTip');
+    const video = document.getElementById('rick-video');
+
+    btn.addEventListener('click', function() {
+        btn.textContent = '⏳ 解密中...';
+        btn.disabled = true;
+        tip.classList.add('show');
+
+        setTimeout(() => {
+            video.style.display = 'block';
+            video.play().catch(() => {
+                document.addEventListener('click', function playOnce() {
+                    video.play();
+                    document.removeEventListener('click', playOnce);
+                });
+            });
+            // 按钮和提示都隐藏，只剩背景图
+            document.querySelector('.container').style.display = 'none';
+            tip.classList.remove('show');
+        }, 1500);
+    });
+</script>
+
+</body>
+</html>
