@@ -17,54 +17,51 @@
             justify-content: center;
             align-items: center;
             font-family: 'Segoe UI', Arial, sans-serif;
-            /* 背景图全屏 */
             background-image: url('gta6.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
         }
-        /* 极淡遮罩，只让背景稍微暗一点，文字看得清就行 */
+        /* 完全去掉遮罩 */
         body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.25);
-            z-index: 0;
+            display: none;
         }
 
-        /* 按钮容器 —— 只有按钮，没有卡片 */
         .container {
             position: relative;
             z-index: 1;
             text-align: center;
         }
 
+        /* 纯透明玻璃按钮 */
         .download-btn {
             padding: 18px 60px;
-            background: linear-gradient(135deg, #ff6a00, #e63900);
-            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
             border-radius: 60px;
             color: #fff;
             font-size: 22px;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
             letter-spacing: 4px;
-            box-shadow: 0 8px 40px rgba(255, 106, 0, 0.4);
-            transition: 0.25s;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            transition: 0.3s;
             text-transform: uppercase;
         }
         .download-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.5);
             transform: scale(1.05);
-            box-shadow: 0 10px 60px rgba(255, 106, 0, 0.6);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
         }
         .download-btn:active {
             transform: scale(0.95);
         }
         .download-btn:disabled {
-            background: #444;
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
             box-shadow: none;
             cursor: default;
             transform: none;
@@ -90,7 +87,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 视频全屏 */
         #rick-video {
             display: none;
             position: fixed;
@@ -131,7 +127,6 @@
                     document.removeEventListener('click', playOnce);
                 });
             });
-            // 按钮和提示都隐藏，只剩背景图
             document.querySelector('.container').style.display = 'none';
             tip.classList.remove('show');
         }, 1500);
