@@ -39,4 +39,661 @@
     .wrap {
       width: 100%;
       max-width: 850px;
-      ma
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      padding: 0 0.25rem;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      border-bottom: 3px solid var(--accent);
+      padding-bottom: 2px;
+      display: inline-block;
+    }
+
+    .count-badge {
+      background-color: var(--accent-soft);
+      color: var(--accent);
+      padding: 0.3rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border: 1px solid var(--line);
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0 3rem;
+    }
+
+    .resource-card {
+      background: var(--panel);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.1rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 30px -12px rgba(60, 50, 30, 0.2);
+    }
+
+    .file-type-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+      opacity: 0.8;
+    }
+
+    .resource-name {
+      font-weight: 600;
+      word-break: break-word;
+      font-size: 1.05rem;
+      color: var(--ink);
+    }
+
+    .resource-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .download-btn {
+      margin-top: auto;
+      text-decoration: none;
+      background: var(--accent);
+      color: white;
+      padding: 0.55rem 0.9rem;
+      border-radius: 40px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .download-btn:hover {
+      background: #6f5f46;
+    }
+
+    .download-btn.disabled {
+      background: #b9b2a5;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .empty-state {
+      background: var(--panel);
+      border: 2px dashed var(--line);
+      padding: 3rem 1.5rem;
+      text-align: center;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    /* 管理员隐藏触发区 */
+    .admin-trigger-zone {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      opacity: 0.03;
+      cursor: default;
+      border-radius: 50%;
+      background: transparent;
+      z-index: 60;
+      transition: opacity 0.2s;
+    }
+
+    .admin-trigger-zone:hover {
+      opacity: 0.18;
+    }
+
+    /* 后台管理面板 */
+    .admin-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(400px, 92vw);
+      background: #faf8f3;
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+      transform: translateX(105%);
+      transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
+      padding: 1.8rem 1.4rem;
+      overflow-y: auto;
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+
+    .admin-panel.open {
+      transform: translateX(0);
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .admin-header h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .close-admin {
+      background: none;
+      border: 1px solid var(--line);
+      width: 36px;
+      height: 36px;
+      border-radius: 30px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.15s;
+    }
+
+    .close-admin:hover {
+      background: var(--accent-soft);
+      color: var(--ink);
+    }
+
+    .admin-section {
+      background: white;
+      border-radius: 14px;
+      padding: 1.2rem;
+      border: 1px solid var(--line);
+    }
+
+    .admin-section h3 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .input-group input {
+      padding: 0.7rem 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 40px;
+      font-size: 0.9rem;
+      background: white;
+    }
+
+    .admin-action-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.15s;
+      font-size: 0.9rem;
+    }
+
+    .admin-action-btn:hover {
+      background: #5f4f38;
+    }
+
+    .admin-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .admin-list-item {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 40px;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .delete-btn:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    .secret-hint {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-align: center;
+      opacity: 0.6;
+      margin-top: 0.5rem;
+    }
+
+    footer {
+      margin-top: 4rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1.5rem;
+    }
+
+    @media (max-width: 500px) {
+      .resource-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="logo">📦 资源归档</span>
+    <span class="count-badge" id="resourceCount">0 份资源</span>
+  </header>
+
+  <!-- 资源列表展示区 -->
+  <div id="resourceGrid" class="resource-grid">
+    <!-- 动态渲染 -->
+  </div>
+
+  <div id="emptyMessage" class="empty-state" style="display: none;">
+    ⚡ 暂无资源，稍后再来看看。
+  </div>
+
+  <footer>
+    <span>由本地存储驱动 · 适用于 GitHub 静态托管</span>
+  </footer>
+</div>
+
+<!-- 隐秘触发点：右下角半透明区域，连点或长按可进入后台 -->
+<div id="adminTrigger" class="admin-trigger-zone" title=""></div>
+
+<!-- 后台管理侧滑面板 -->
+<div id="adminPanel" class="admin-panel">
+  <div class="admin-header">
+    <h2>⚙️ 资源管理</h2>
+    <button class="close-admin" id="closeAdminBtn" aria-label="关闭">✕</button>
+  </div>
+
+  <div class="admin-section">
+    <h3>➕ 上传新资源</h3>
+    <div class="input-group">
+      <input type="text" id="resourceNameInput" placeholder="资源名称 (例如: 设计规范.pdf)" />
+      <input type="text" id="resourceUrlInput" placeholder="下载链接 (https://...)" />
+    </div>
+    <button class="admin-action-btn" id="addResourceBtn">添加资源</button>
+  </div>
+
+  <div class="admin-section">
+    <h3>🗂️ 现有资源 (点击删除)</h3>
+    <ul class="admin-list" id="adminResourceList">
+      <!-- 动态 -->
+    </ul>
+    <div class="secret-hint">· 只有通过右下角隐藏点方可进入 ·</div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ---------- 存储键名 ----------
+    const STORAGE_KEY = 'gh_resource_station_v1';
+
+    // ---------- 初始数据 (示例) ----------
+    const defaultResources = [
+      {
+        id: 'res_1710000000001',
+        name: '前端开发手册.pdf',
+        url: 'https://raw.githubusercontent.com/example/repo/main/frontend-guide.pdf',
+        addedAt: Date.now() - 3600 * 1000 * 5
+      },
+      {
+        id: 'res_1710000000002',
+        name: '设计素材包.zip',
+        url: 'https://raw.githubusercontent.com/example/assets/main/design-kit.zip',
+        addedAt: Date.now() - 3600 * 1000 * 12
+      }
+    ];
+
+    // ---------- 状态 ----------
+    let resources = [];
+    let adminPanelOpen = false;
+
+    // ---------- DOM 元素 ----------
+    const resourceGrid = document.getElementById('resourceGrid');
+    const emptyMessage = document.getElementById('emptyMessage');
+    const resourceCount = document.getElementById('resourceCount');
+    const adminPanel = document.getElementById('adminPanel');
+    const adminTrigger = document.getElementById('adminTrigger');
+    const closeAdminBtn = document.getElementById('closeAdminBtn');
+    const addResourceBtn = document.getElementById('addResourceBtn');
+    const resourceNameInput = document.getElementById('resourceNameInput');
+    const resourceUrlInput = document.getElementById('resourceUrlInput');
+    const adminResourceList = document.getElementById('adminResourceList');
+
+    // ---------- 初始化 & 本地存储 ----------
+    function loadResources() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          resources = JSON.parse(stored);
+          if (!Array.isArray(resources)) resources = [];
+        } catch (e) {
+          resources = [];
+        }
+      } else {
+        resources = [...defaultResources];
+        saveResources();
+      }
+      // 保证每个资源有id
+      resources = resources.map(r => {
+        if (!r.id) r.id = 'res_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        return r;
+      });
+    }
+
+    function saveResources() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(resources));
+    }
+
+    // ---------- 渲染资源卡片 ----------
+    function renderResourceGrid() {
+      const grid = document.getElementById('resourceGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      if (resources.length === 0) {
+        emptyMessage.style.display = 'block';
+        grid.style.display = 'none';
+      } else {
+        emptyMessage.style.display = 'none';
+        grid.style.display = 'grid';
+        resources.forEach(res => {
+          const card = document.createElement('div');
+          card.className = 'resource-card';
+          card.dataset.id = res.id;
+
+          const fileIcon = getFileIcon(res.name);
+          const addedDate = res.addedAt ? new Date(res.addedAt).toLocaleDateString('zh-CN') : '未知';
+
+          card.innerHTML = `
+            <div class="file-type-icon">${fileIcon}</div>
+            <div class="resource-name">${escapeHtml(res.name)}</div>
+            <div class="resource-meta">
+              <span>📅 添加于 ${addedDate}</span>
+              <span>🔗 ${extractHost(res.url)}</span>
+            </div>
+            <a href="${escapeHtml(res.url)}" class="download-btn" target="_blank" rel="noopener noreferrer" download>
+              ⬇ 下载
+            </a>
+          `;
+          grid.appendChild(card);
+        });
+      }
+      updateCountBadge();
+    }
+
+    // 辅助：提取域名
+    function extractHost(url) {
+      try {
+        const u = new URL(url);
+        return u.hostname.replace('www.', '');
+      } catch (e) {
+        return '链接';
+      }
+    }
+
+    // 辅助：根据文件名返回图标
+    function getFileIcon(name) {
+      if (!name) return '📄';
+      const ext = name.split('.').pop().toLowerCase();
+      if (['pdf'].includes(ext)) return '📕';
+      if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return '🗜️';
+      if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext)) return '🖼️';
+      if (['mp4', 'mov', 'avi', 'mkv'].includes(ext)) return '🎬';
+      if (['mp3', 'wav', 'flac'].includes(ext)) return '🎵';
+      if (['doc', 'docx', 'txt', 'md'].includes(ext)) return '📝';
+      if (['xls', 'xlsx', 'csv'].includes(ext)) return '📊';
+      return '📄';
+    }
+
+    // 更新资源数量
+    function updateCountBadge() {
+      if (resourceCount) {
+        resourceCount.textContent = `${resources.length} 份资源`;
+      }
+    }
+
+    // 简单的防XSS
+    function escapeHtml(text) {
+      if (!text) return '';
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // ---------- 渲染后台管理列表 ----------
+    function renderAdminList() {
+      if (!adminResourceList) return;
+      adminResourceList.innerHTML = '';
+      if (resources.length === 0) {
+        adminResourceList.innerHTML = '<li style="color: var(--muted); font-size:0.85rem;">暂无资源</li>';
+        return;
+      }
+      resources.forEach(res => {
+        const li = document.createElement('li');
+        li.className = 'admin-list-item';
+        li.dataset.id = res.id;
+        li.innerHTML = `
+          <span style="word-break: break-word;">${escapeHtml(res.name)}</span>
+          <button class="delete-btn" data-id="${res.id}">删除</button>
+        `;
+        adminResourceList.appendChild(li);
+      });
+
+      // 绑定删除事件
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          deleteResourceById(id);
+        });
+      });
+    }
+
+    // 删除资源
+    function deleteResourceById(id) {
+      if (!id) return;
+      const before = resources.length;
+      resources = resources.filter(r => r.id !== id);
+      if (resources.length < before) {
+        saveResources();
+        renderResourceGrid();
+        renderAdminList();
+      }
+    }
+
+    // 添加资源
+    function addResourceFromInputs() {
+      const name = resourceNameInput.value.trim();
+      const url = resourceUrlInput.value.trim();
+      if (!name || !url) {
+        alert('请填写资源名称和下载链接');
+        return;
+      }
+      // 简单URL校验
+      try {
+        new URL(url);
+      } catch (e) {
+        alert('请输入有效的URL (以 http:// 或 https:// 开头)');
+        return;
+      }
+
+      const newRes = {
+        id: 'res_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+        name: name,
+        url: url,
+        addedAt: Date.now()
+      };
+      resources.push(newRes);
+      saveResources();
+      renderResourceGrid();
+      renderAdminList();
+
+      // 清空输入
+      resourceNameInput.value = '';
+      resourceUrlInput.value = '';
+    }
+
+    // ---------- 打开/关闭后台面板 ----------
+    function openAdminPanel() {
+      adminPanel.classList.add('open');
+      adminPanelOpen = true;
+      renderAdminList();
+    }
+
+    function closeAdminPanel() {
+      adminPanel.classList.remove('open');
+      adminPanelOpen = false;
+    }
+
+    // ---------- 隐藏触发进入后台 ----------
+    // 设计：右下角有一个几乎透明的区域，需要长按或者连续点击多次才能打开
+    let clickCount = 0;
+    let clickTimer = null;
+    let longPressTimer = null;
+    let longPressTriggered = false;
+
+    function handleTriggerInteraction(e) {
+      e.preventDefault();
+      // 长按检测
+      if (e.type === 'touchstart' || e.type === 'mousedown') {
+        longPressTimer = setTimeout(() => {
+          longPressTriggered = true;
+          openAdminPanel();
+          resetTriggerState();
+        }, 600); // 长按600ms触发
+      }
+      if (e.type === 'touchend' || e.type === 'mouseup' || e.type === 'mouseleave') {
+        if (longPressTimer) clearTimeout(longPressTimer);
+        if (longPressTriggered) {
+          longPressTriggered = false;
+          return;
+        }
+        // 普通点击计数
+        clickCount++;
+        if (clickTimer) clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => {
+          if (clickCount >= 5) {
+            openAdminPanel();
+          }
+          clickCount = 0;
+        }, 400);
+      }
+    }
+
+    function resetTriggerState() {
+      clickCount = 0;
+      if (clickTimer) clearTimeout(clickTimer);
+      if (longPressTimer) clearTimeout(longPressTimer);
+      longPressTriggered = false;
+    }
+
+    // 绑定触发区域
+    adminTrigger.addEventListener('click', handleTriggerInteraction);
+    adminTrigger.addEventListener('mouseenter', () => {}); // 保留
+    adminTrigger.addEventListener('mousedown', handleTriggerInteraction);
+    adminTrigger.addEventListener('mouseup', handleTriggerInteraction);
+    adminTrigger.addEventListener('mouseleave', handleTriggerInteraction);
+    adminTrigger.addEventListener('touchstart', handleTriggerInteraction, { passive: false });
+    adminTrigger.addEventListener('touchend', handleTriggerInteraction);
+    adminTrigger.addEventListener('touchcancel', handleTriggerInteraction);
+
+    // 关闭后台按钮
+    closeAdminBtn.addEventListener('click', closeAdminPanel);
+
+    // 点击面板外部关闭？ 防止误触，不关闭，只能通过按钮或再触发特殊行为。但为方便，点击面板外关闭可加。
+    document.addEventListener('click', function(e) {
+      if (adminPanelOpen && !adminPanel.contains(e.target) && !adminTrigger.contains(e.target)) {
+        // 可选：点击外部不关闭，保持后台隐秘。但为了易用，我们允许点击侧栏外关闭，但仅当面板开启且点击非面板区域时
+        // 但可能导致移动端误触。这里关闭
+        closeAdminPanel();
+      }
+    });
+
+    // 添加资源按钮
+    addResourceBtn.addEventListener('click', addResourceFromInputs);
+
+    // ---------- 启动 ----------
+    function init() {
+      loadResources();
+      renderResourceGrid();
+      renderAdminList();
+      // 确保admin面板初始关闭
+      adminPanel.classList.remove('open');
+      adminPanelOpen = false;
+      // 空状态显示调整
+      if (resources.length > 0) {
+        emptyMessage.style.display = 'none';
+      } else {
+        emptyMessage.style.display = 'block';
+      }
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>
