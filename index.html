@@ -1,137 +1,42 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GTA6 高清泄露版</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            min-height: 100vh;
-            background: #0a0a0a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-image: url('gta6.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-        /* 完全去掉遮罩 */
-        body::before {
-            display: none;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>资源小站 · 归档下载</title>
+  <style>
+    :root {
+      --bg: #f2f0e9;
+      --panel: #ffffff;
+      --ink: #2c2b28;
+      --muted: #6e6a5e;
+      --line: #ddd8cc;
+      --accent: #8a7a5c;
+      --accent-soft: #e9e3d8;
+      --danger: #a14f3c;
+      --radius: 16px;
+      --shadow: 0 10px 25px -12px rgba(40, 30, 10, 0.15);
+    }
 
-        .container {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        /* 纯透明玻璃按钮 */
-        .download-btn {
-            padding: 18px 60px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1.5px solid rgba(255, 255, 255, 0.25);
-            border-radius: 60px;
-            color: #fff;
-            font-size: 22px;
-            font-weight: 700;
-            cursor: pointer;
-            letter-spacing: 4px;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-        .download-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: scale(1.05);
-            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
-        }
-        .download-btn:active {
-            transform: scale(0.95);
-        }
-        .download-btn:disabled {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: none;
-            cursor: default;
-            transform: none;
-        }
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', sans-serif;
+      line-height: 1.5;
+      padding: 1.5rem 1rem 3rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        .loading-tip {
-            margin-top: 18px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-            display: none;
-            letter-spacing: 1px;
-        }
-        .loading-tip.show {
-            display: block;
-        }
-        .loading-tip i {
-            display: inline-block;
-            animation: spin 1s linear infinite;
-            font-style: normal;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #rick-video {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            z-index: 9999;
-            background: #000;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <button class="download-btn" id="downloadBtn">⬇ 立即下载</button>
-    <div class="loading-tip" id="loadingTip"><i>⟳</i> 正在连接R星服务器...</div>
-</div>
-
-<video id="rick-video" src="rick.mp4" playsinline preload="auto"></video>
-
-<script>
-    const btn = document.getElementById('downloadBtn');
-    const tip = document.getElementById('loadingTip');
-    const video = document.getElementById('rick-video');
-
-    btn.addEventListener('click', function() {
-        btn.textContent = '⏳ 解密中...';
-        btn.disabled = true;
-        tip.classList.add('show');
-
-        setTimeout(() => {
-            video.style.display = 'block';
-            video.play().catch(() => {
-                document.addEventListener('click', function playOnce() {
-                    video.play();
-                    document.removeEventListener('click', playOnce);
-                });
-            });
-            document.querySelector('.container').style.display = 'none';
-            tip.classList.remove('show');
-        }, 1500);
-    });
-</script>
-
-</body>
-</html>
+    .wrap {
+      width: 100%;
+      max-width: 850px;
+      ma
