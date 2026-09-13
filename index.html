@@ -1,578 +1,136 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>资源小站 · 归档下载</title>
-  <style>
-    :root {
-      --bg: #f2f0e9;
-      --panel: #ffffff;
-      --ink: #2c2b28;
-      --muted: #6e6a5e;
-      --line: #ddd8cc;
-      --accent: #8a7a5c;
-      --accent-soft: #e9e3d8;
-      --danger: #a14f3c;
-      --radius: 16px;
-      --shadow: 0 10px 25px -12px rgba(40, 30, 10, 0.15);
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>免费开户</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-image: url('gta6.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        /* 完全去掉遮罩 */
+        body::before {
+            display: none;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
 
-    body {
-      background-color: var(--bg);
-      color: var(--ink);
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', sans-serif;
-      line-height: 1.5;
-      padding: 1.5rem 1rem 3rem;
-      min-height: 100vh;
-    }
+        /* 纯透明玻璃按钮 */
+        .download-btn {
+            padding: 18px 60px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            border-radius: 60px;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 4px;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .download-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+        }
+        .download-btn:active {
+            transform: scale(0.95);
+        }
+        .download-btn:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+            cursor: default;
+            transform: none;
+        }
 
-    .wrap {
-      width: 100%;
-      max-width: 850px;
-      margin: 0 auto;
-    }
+        .loading-tip {
+            margin-top: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            display: none;
+            letter-spacing: 1px;
+        }
+        .loading-tip.show {
+            display: block;
+        }
+        .loading-tip i {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+            font-style: normal;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-    header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-      padding: 0 0.25rem;
-    }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      border-bottom: 3px solid var(--accent);
-      padding-bottom: 2px;
-      display: inline-block;
-    }
-
-    .count-badge {
-      background-color: var(--accent-soft);
-      color: var(--accent);
-      padding: 0.3rem 0.9rem;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      border: 1px solid var(--line);
-    }
-
-    .resource-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1.2rem;
-      margin: 2rem 0 3rem;
-    }
-
-    .resource-card {
-      background: var(--panel);
-      border-radius: var(--radius);
-      padding: 1.2rem 1.1rem;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--line);
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      transition: transform 0.15s ease, box-shadow 0.2s ease;
-    }
-
-    .resource-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 18px 30px -12px rgba(60, 50, 30, 0.2);
-    }
-
-    .file-type-icon {
-      font-size: 1.6rem;
-      line-height: 1;
-      opacity: 0.8;
-    }
-
-    .resource-name {
-      font-weight: 600;
-      word-break: break-word;
-      font-size: 1.05rem;
-    }
-
-    .resource-meta {
-      font-size: 0.78rem;
-      color: var(--muted);
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .download-btn {
-      margin-top: auto;
-      text-decoration: none;
-      background: var(--accent);
-      color: white;
-      padding: 0.55rem 0.9rem;
-      border-radius: 40px;
-      text-align: center;
-      font-size: 0.9rem;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      transition: background 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-    }
-
-    .download-btn:hover {
-      background: #6f5f46;
-    }
-
-    .empty-state {
-      background: var(--panel);
-      border: 2px dashed var(--line);
-      padding: 3rem 1.5rem;
-      text-align: center;
-      border-radius: var(--radius);
-      color: var(--muted);
-      font-size: 1rem;
-    }
-
-    .admin-login-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 200;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(4px);
-    }
-
-    .admin-login-overlay.active {
-      display: flex;
-    }
-
-    .admin-login-box {
-      background: #faf8f3;
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
-      width: min(400px, 90vw);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-      text-align: center;
-    }
-
-    .admin-login-box h2 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .admin-login-box p {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .admin-login-box input {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      border: 2px solid var(--line);
-      border-radius: 40px;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      text-align: center;
-      outline: none;
-    }
-
-    .admin-login-box input:focus {
-      border-color: var(--accent);
-    }
-
-    .admin-login-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 0.8rem 2rem;
-      border-radius: 40px;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .admin-login-btn:hover {
-      background: #5f4f38;
-    }
-
-    .login-error {
-      color: var(--danger);
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
-      display: none;
-    }
-
-    .admin-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      height: 100vh;
-      width: min(400px, 92vw);
-      background: #faf8f3;
-      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
-      z-index: 100;
-      transform: translateX(105%);
-      transition: transform 0.25s;
-      padding: 1.8rem 1.4rem;
-      overflow-y: auto;
-      border-left: 1px solid var(--line);
-      display: flex;
-      flex-direction: column;
-      gap: 1.8rem;
-    }
-
-    .admin-panel.open {
-      transform: translateX(0);
-    }
-
-    .admin-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .admin-header h2 {
-      font-size: 1.4rem;
-      font-weight: 600;
-    }
-
-    .close-admin {
-      background: none;
-      border: 1px solid var(--line);
-      width: 36px;
-      height: 36px;
-      border-radius: 30px;
-      font-size: 1.3rem;
-      cursor: pointer;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .admin-section {
-      background: white;
-      border-radius: 14px;
-      padding: 1.2rem;
-      border: 1px solid var(--line);
-    }
-
-    .admin-section h3 {
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .input-group input {
-      padding: 0.7rem 0.9rem;
-      border: 1px solid var(--line);
-      border-radius: 40px;
-      font-size: 0.9rem;
-    }
-
-    .admin-action-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 0.7rem 1.2rem;
-      border-radius: 40px;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .admin-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-    }
-
-    .admin-list-item {
-      background: white;
-      border: 1px solid var(--line);
-      border-radius: 40px;
-      padding: 0.5rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.9rem;
-    }
-
-    .delete-btn {
-      background: transparent;
-      border: 1px solid var(--danger);
-      color: var(--danger);
-      border-radius: 30px;
-      padding: 0.2rem 0.8rem;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-
-    .delete-btn:hover {
-      background: var(--danger);
-      color: white;
-    }
-
-    footer {
-      margin-top: 4rem;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.8rem;
-      border-top: 1px solid var(--line);
-      padding-top: 1.5rem;
-    }
-
-    @media (max-width: 500px) {
-      .resource-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+        #rick-video {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 9999;
+            background: #000;
+        }
+    </style>
 </head>
 <body>
 
-<div class="wrap" id="mainContent">
-  <header>
-    <span class="logo">📦 资源归档</span>
-    <span class="count-badge" id="resourceCount">0 份资源</span>
-  </header>
-
-  <div id="resourceGrid" class="resource-grid"></div>
-
-  <div id="emptyMessage" class="empty-state" style="display: none;">
-    ⚡ 暂无资源，稍后再来看看。
-  </div>
-
-  <footer>
-    <span>由本地存储驱动 · 适用于 GitHub 静态托管</span>
-  </footer>
+<div class="container">
+    <button class="download-btn" id="downloadBtn">免费开户</button>
+    <div class="loading-tip" id="loadingTip"><i>⟳</i> 正在跳转开户网站</div>
 </div>
 
-<!-- 密码验证 -->
-<div class="admin-login-overlay" id="adminLoginOverlay">
-  <div class="admin-login-box">
-    <h2>🔐 管理员验证</h2>
-    <p>请输入访问密码</p>
-    <input type="password" id="adminPasswordInput" placeholder="••••••••" autocomplete="off" />
-    <button class="admin-login-btn" id="adminLoginBtn">验证进入</button>
-    <div class="login-error" id="loginError">密码错误，请重试</div>
-  </div>
-</div>
-
-<!-- 后台面板 -->
-<div id="adminPanel" class="admin-panel">
-  <div class="admin-header">
-    <h2>⚙️ 资源管理</h2>
-    <button class="close-admin" id="closeAdminBtn">✕</button>
-  </div>
-
-  <div class="admin-section">
-    <h3>➕ 上传新资源</h3>
-    <div class="input-group">
-      <input type="text" id="resourceNameInput" placeholder="资源名称" />
-      <input type="text" id="resourceUrlInput" placeholder="下载链接 (https://...)" />
-    </div>
-    <button class="admin-action-btn" id="addResourceBtn">添加资源</button>
-  </div>
-
-  <div class="admin-section">
-    <h3>🗂️ 现有资源</h3>
-    <ul class="admin-list" id="adminResourceList"></ul>
-  </div>
-</div>
+<video id="rick-video" src="rick.mp4" playsinline preload="auto"></video>
 
 <script>
-  (function() {
-    const ADMIN_PASSWORD = 'ZQDnb678';
-    const STORAGE_KEY = 'gh_resource_station_v1';
+    const btn = document.getElementById('downloadBtn');
+    const tip = document.getElementById('loadingTip');
+    const video = document.getElementById('rick-video');
 
-    const defaultResources = [
-      {
-        id: 'res_demo_1',
-        name: '示例文件.pdf',
-        url: 'https://example.com/demo.pdf',
-        addedAt: Date.now()
-      }
-    ];
+    btn.addEventListener('click', function() {
+        btn.textContent = '⏳ 解密中...';
+        btn.disabled = true;
+        tip.classList.add('show');
 
-    let resources = [];
-    let isAdmin = false;
-
-    const resourceGrid = document.getElementById('resourceGrid');
-    const emptyMessage = document.getElementById('emptyMessage');
-    const resourceCount = document.getElementById('resourceCount');
-    const adminPanel = document.getElementById('adminPanel');
-    const adminLoginOverlay = document.getElementById('adminLoginOverlay');
-    const adminPasswordInput = document.getElementById('adminPasswordInput');
-    const adminLoginBtn = document.getElementById('adminLoginBtn');
-    const loginError = document.getElementById('loginError');
-    const closeAdminBtn = document.getElementById('closeAdminBtn');
-    const addResourceBtn = document.getElementById('addResourceBtn');
-    const resourceNameInput = document.getElementById('resourceNameInput');
-    const resourceUrlInput = document.getElementById('resourceUrlInput');
-    const adminResourceList = document.getElementById('adminResourceList');
-    const mainContent = document.getElementById('mainContent');
-
-    function loadResources() {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        try {
-          resources = JSON.parse(stored);
-          if (!Array.isArray(resources)) resources = [];
-        } catch (e) {
-          resources = [];
-        }
-      } else {
-        resources = [...defaultResources];
-        saveResources();
-      }
-    }
-
-    function saveResources() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(resources));
-    }
-
-    function checkAdminPath() {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('admin') === '1') return true;
-      return false;
-    }
-
-    function renderResourceGrid() {
-      resourceGrid.innerHTML = '';
-      if (resources.length === 0) {
-        emptyMessage.style.display = 'block';
-        resourceGrid.style.display = 'none';
-      } else {
-        emptyMessage.style.display = 'none';
-        resourceGrid.style.display = 'grid';
-        resources.forEach(res => {
-          const card = document.createElement('div');
-          card.className = 'resource-card';
-          card.innerHTML = `
-            <div class="file-type-icon">📄</div>
-            <div class="resource-name">${escapeHtml(res.name)}</div>
-            <div class="resource-meta">
-              <span>📅 ${new Date(res.addedAt).toLocaleDateString('zh-CN')}</span>
-            </div>
-            <a href="${escapeHtml(res.url)}" class="download-btn" target="_blank" download>⬇ 下载</a>
-          `;
-          resourceGrid.appendChild(card);
-        });
-      }
-      resourceCount.textContent = `${resources.length} 份资源`;
-    }
-
-    function renderAdminList() {
-      adminResourceList.innerHTML = '';
-      if (resources.length === 0) {
-        adminResourceList.innerHTML = '<li style="color:#6e6a5e;">暂无资源</li>';
-        return;
-      }
-      resources.forEach(res => {
-        const li = document.createElement('li');
-        li.className = 'admin-list-item';
-        li.innerHTML = `
-          <span>${escapeHtml(res.name)}</span>
-          <button class="delete-btn" data-id="${res.id}">删除</button>
-        `;
-        adminResourceList.appendChild(li);
-      });
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const id = e.target.getAttribute('data-id');
-          resources = resources.filter(r => r.id !== id);
-          saveResources();
-          renderResourceGrid();
-          renderAdminList();
-        });
-      });
-    }
-
-    function escapeHtml(text) {
-      return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    function verifyAdmin() {
-      if (adminPasswordInput.value === ADMIN_PASSWORD) {
-        isAdmin = true;
-        adminLoginOverlay.classList.remove('active');
-        mainContent.style.display = 'block';
-        adminPanel.classList.add('open');
-        renderAdminList();
-        adminPasswordInput.value = '';
-        loginError.style.display = 'none';
-      } else {
-        loginError.style.display = 'block';
-        adminPasswordInput.value = '';
-      }
-    }
-
-    function closeAdminPanel() {
-      adminPanel.classList.remove('open');
-      isAdmin = false;
-      window.history.replaceState(null, '', window.location.pathname);
-    }
-
-    adminLoginBtn.addEventListener('click', verifyAdmin);
-    adminPasswordInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') verifyAdmin();
+        setTimeout(() => {
+            video.style.display = 'block';
+            video.play().catch(() => {
+                document.addEventListener('click', function playOnce() {
+                    video.play();
+                    document.removeEventListener('click', playOnce);
+                });
+            });
+            document.querySelector('.container').style.display = 'none';
+            tip.classList.remove('show');
+        }, 1500);
     });
-    closeAdminBtn.addEventListener('click', closeAdminPanel);
-    addResourceBtn.addEventListener('click', () => {
-      const name = resourceNameInput.value.trim();
-      const url = resourceUrlInput.value.trim();
-      if (!name || !url) { alert('请填写完整'); return; }
-      resources.push({
-        id: 'res_' + Date.now(),
-        name: name,
-        url: url,
-        addedAt: Date.now()
-      });
-      saveResources();
-      renderResourceGrid();
-      renderAdminList();
-      resourceNameInput.value = '';
-      resourceUrlInput.value = '';
-    });
-
-    loadResources();
-    renderResourceGrid();
-
-    if (checkAdminPath()) {
-      adminLoginOverlay.classList.add('active');
-      mainContent.style.display = 'none';
-    }
-  })();
 </script>
 
 </body>
