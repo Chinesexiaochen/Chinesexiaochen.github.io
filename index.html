@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>免费开户</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         * {
             margin: 0;
@@ -23,7 +24,6 @@
             display: none;
         }
 
-        /* 按钮固定在中下方 */
         .container {
             position: fixed;
             bottom: 18%;
@@ -34,7 +34,6 @@
             width: 100%;
         }
 
-        /* 纯透明玻璃按钮 */
         .download-btn {
             padding: 18px 60px;
             background: rgba(255, 255, 255, 0.08);
@@ -87,7 +86,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 视频全屏 */
         #rick-video {
             display: none;
             position: fixed;
@@ -105,13 +103,11 @@
 
 <div class="container">
     <button class="download-btn" id="downloadBtn">免费开户</button>
-    <div class="loading-tip" id="loadingTip"><i>⟳</i> 正在连接加密网站...</div>
+    <div class="loading-tip" id="loadingTip"><i>⟳</i> 正在链接至加密网站...</div>
 </div>
 
-<!-- 关键：加了微信内联播放属性 -->
 <video
     id="rick-video"
-    src="rick.mp4"
     playsinline
     webkit-playsinline
     x5-playsinline="true"
@@ -125,18 +121,27 @@
     const video = document.getElementById('rick-video');
 
     btn.addEventListener('click', function() {
-        btn.textContent = '正在跳转网站.';
+        btn.textContent = '⏳ 解密中...';
         btn.disabled = true;
         tip.classList.add('show');
 
         setTimeout(() => {
             video.style.display = 'block';
-            video.play().catch(() => {
-                document.addEventListener('click', function playOnce() {
-                    video.play();
-                    document.removeEventListener('click', playOnce);
+
+            // 播放 HLS 视频
+            const videoSrc = 'playlist.m3u8';
+            if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play().catch(() => {});
                 });
-            });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoSrc;
+                video.play().catch(() => {});
+            }
+
             document.querySelector('.container').style.display = 'none';
             tip.classList.remove('show');
         }, 1500);
