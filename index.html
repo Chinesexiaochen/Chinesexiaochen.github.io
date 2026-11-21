@@ -1,152 +1,35 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>免费开户</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            min-height: 100vh;
-            background: #0a0a0a;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-image: url('gta6.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-        body::before {
-            display: none;
-        }
-
-        .container {
-            position: fixed;
-            bottom: 18%;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1;
-            text-align: center;
-            width: 100%;
-        }
-
-        .download-btn {
-            padding: 18px 60px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1.5px solid rgba(255, 255, 255, 0.25);
-            border-radius: 60px;
-            color: #000;
-            font-size: 22px;
-            font-weight: 800;
-            cursor: pointer;
-            letter-spacing: 4px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-        .download-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: scale(1.05);
-            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
-        }
-        .download-btn:active {
-            transform: scale(0.95);
-        }
-        .download-btn:disabled {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: none;
-            cursor: default;
-            transform: none;
-            color: #555;
-        }
-
-        .loading-tip {
-            margin-top: 18px;
-            color: rgba(0, 0, 0, 0.6);
-            font-size: 14px;
-            display: none;
-            letter-spacing: 1px;
-        }
-        .loading-tip.show {
-            display: block;
-        }
-        .loading-tip i {
-            display: inline-block;
-            animation: spin 1s linear infinite;
-            font-style: normal;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #rick-video {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            z-index: 9999;
-            background: #000;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>教程视频</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      color: #eee;
+      font-family: system-ui, sans-serif;
+    }
+    h1 { font-size: 1.4rem; font-weight: 500; margin-bottom: 16px; }
+    video {
+      width: min(90vw, 960px);
+      border-radius: 10px;
+      background: #000;
+      box-shadow: 0 8px 30px rgba(0,0,0,.5);
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
-    <button class="download-btn" id="downloadBtn">免费开户</button>
-    <div class="loading-tip" id="loadingTip"><i>⟳</i> 正在链接至加密网站...</div>
-</div>
-
-<video
-    id="rick-video"
-    playsinline
-    webkit-playsinline
-    x5-playsinline="true"
-    x5-video-player-type="h5"
-    preload="auto"
-></video>
-
-<script>
-    const btn = document.getElementById('downloadBtn');
-    const tip = document.getElementById('loadingTip');
-    const video = document.getElementById('rick-video');
-
-    btn.addEventListener('click', function() {
-        btn.textContent = '⏳ 解密中...';
-        btn.disabled = true;
-        tip.classList.add('show');
-
-        setTimeout(() => {
-            video.style.display = 'block';
-
-            // 播放 HLS 视频
-            const videoSrc = 'playlist.m3u8';
-            if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(videoSrc);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(() => {});
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = videoSrc;
-                video.play().catch(() => {});
-            }
-
-            document.querySelector('.container').style.display = 'none';
-            tip.classList.remove('show');
-        }, 1500);
-    });
-</script>
-
+  <h1>教程视频</h1>
+  <video controls preload="metadata">
+    <source src="jiaocheng.mp4" type="video/mp4">
+    你的浏览器不支持视频播放。
+  </video>
 </body>
 </html>
